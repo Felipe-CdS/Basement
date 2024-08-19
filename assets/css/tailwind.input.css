@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+	.heading-primary {
+		@apply text-xl font-semibold;
+	}
+	li {
+		@apply list-disc;
+	}
+}
+
+@layer base {
+	@font-face {
+		font-family: 'NotoserifKR';
+		src: url("/assets/fonts/NotoSerifKR.ttf") format('truetype');
+	}
+}
