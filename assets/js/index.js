@@ -7,6 +7,7 @@ links = [
   "https://dancres.github.io/Pages/",
   "https://vlimki.dev/",
   "https://adueck.github.io/blog/",
+  "https://world.hey.com/dhh/",
 ];
 
 function addItems() {

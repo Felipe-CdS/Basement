@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        kr: ["NotoSerifKR", "ui-serif"],
+        kr: ["Noto Serif KR", "ui-serif"],
       },
     },
   },

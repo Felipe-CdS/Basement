@@ -11,9 +11,3 @@
 	}
 }
 
-@layer base {
-	@font-face {
-		font-family: 'NotoserifKR';
-		src: url("/assets/fonts/NotoSerifKR.ttf") format('truetype');
-	}
-}

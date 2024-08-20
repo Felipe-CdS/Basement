@@ -29,3 +29,5 @@ live/sync_assets:
 live: 
 	make -j4 live/templ live/server live/sync_assets
 
+build: 
+	go build -o bin/main ./cmd
