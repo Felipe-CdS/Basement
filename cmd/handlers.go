@@ -2,7 +2,6 @@ package main
 
 import (
 	"net/http"
-
 	"nugu.dev/basement/views"
 )
 

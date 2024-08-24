@@ -8,6 +8,8 @@ package views
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
+import "strconv"
+
 func LandingPageView() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -26,7 +28,84 @@ func LandingPageView() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html lang=\"en\" data-theme=\"dark\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><meta name=\"google\" content=\"notranslate\"><title>Basement </title><link rel=\"icon\" type=\"image/svg+xml\" href=\"/assets/img/favicon.ico\"><link rel=\"stylesheet\" type=\"text/css\" href=\"/assets/css/styles.css\"><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link href=\"https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&amp;display=swap\" rel=\"stylesheet\"></head><body class=\"flex flex-col bg-[#0F0F0F] text-white p-10\"><div class=\"mx-auto w-full bg-center bg-cover md:w-7/12 min-h-48\" style=\"background-image: url(assets/img/kyubey.png);\"></div><h1 class=\"mx-auto mt-2 text-4xl heading-primary font-kr\">누구세요?</h1><div id=\"links-list\" class=\"flex flex-col mt-5\"><h2 id=\"papers-articles-books\" class=\"heading-primary\">Papers / Articles / Books</h2><ul><li><p>[ ]  <a href=\"https://efrei.poupa.net/programmation%20en%20c/cours/the_c_puzzle_book.pdf\">★★★★★ | The C puzzle book</a></p></li><li><p>[ ]  <a href=\"https://www.cis.upenn.edu/~cis5150/linalg-I-f.pdf\">★★★★★ | Linear Algebra for Computer Vision, Robotics, and Machine Learning</a></p></li><li><p>[ ]  <a href=\"https://jeffe.cs.illinois.edu/teaching/algorithms/\">★★★★★ | Algorithms</a></p></li><li><p>[ ]  <a href=\"https://siboehm.com/articles/22/Fast-MMM-on-CPU\">★★★★★ | Fast Multidimensional Matrix Multiplication on CPU from Scratch</a></p></li><li><p>[ ]  <a href=\"https://people.freebsd.org/~lstewart/articles/cpumemory.pdf\">★★★★☆ | What every programmer should know about memory</a></p></li><li><p>[ ]  <a href=\"https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf\">★★★★☆ | MapReduce: Simplified Data Processing on Large Clusters</a></p></li><li><p>[ ] <a href=\"https://raytracing.github.io/\">★★★★☆ | ray tracing in one week</a></p></li><li><p>[112/495] ★★★☆☆ | Let's Go - Alex Edwards</p></li><li><p>[ ] ★★★★☆ | Let's Go Further - Alex Edwards</p></li></ul><h2 id=\"less-than-1-hour-reads\" class=\"heading-primary\">Less than 1 hour reads</h2><ul><li><p>[ ]  <a href=\"https://deno.com/blog/http-imports\">What we got wrong about HTTP imports</a></p></li><li><p>[ ]  <a href=\"https://anishathalye.com/managing-your-dotfiles/\">Managing your dotfiles</a></p></li><li><p>[ ]  <a href=\"https://thesquareplanet.com/blog/eisenhower-vectors/\">Eisenhower Vectors</a></p></li><li><p>[ ]  <a href=\"https://thesquareplanet.com/blog/how-the-internet-works/\">How the internet works</a></p></li><li><p>[ ]  <a href=\"https://ismailefe.org/blog/why_use_emacs/\">Why use emacs</a></p></li><li><p>[ ]  <a href=\"https://blog.teamtreehouse.com/go-interfaces-awesome\">Go Interfaces are awesome</a></p></li><li><p>[ ]  <a href=\"https://benhoyt.com/writings/how-to-apply/\">How (not) to apply for a software job</a></p></li><li><p>[ ]  <a href=\"https://benhoyt.com/writings/go-routing/\">Different approaches to HTTP routing in Go</a></p></li><li><p>[ ]  <a href=\"https://www.0x65.dev/blog/2019-12-06/building-a-search-engine-from-scratch.html\">Building a search engine from scratch</a></p></li></ul><h2 id=\"videos\" class=\"heading-primary\">Videos</h2><ul><li>[ ]  <a href=\"https://www.youtube.com/watch?v=z56jmr9z34q&amp;list=plyzovjj3bhqulokgg59rs43e29ro7i57j&amp;index=3\">★★★★★ | MIT CS Classes</a></li><li>[ ]  <a href=\"https://www.youtube.com/watch?v=HaBMAD-Dr8M&amp;list=PLnAxReCloSeTJc8ZGogzjtCtXl_eE6yzA\">★★★☆☆ | How Computers Work - Building Scott&#39;s CPU</a></li></ul><h2 id=\"full-blogs\" class=\"heading-primary\">Full Blogs</h2><h4 id=\"from-x\" class=\"heading-primary\">From X</h4><ul><li><a href=\"https://graffioh.com/\">bertø (@graffioh)</a></li></ul><h4 id=\"from-college-material\" class=\"heading-primary\">From College Material</h4><ul><li><a href=\"https://anishathalye.com/\">Anish Athalye (MIT)</a></li><li><a href=\"https://thesquareplanet.com/blog/\">Jon Gjengset (MIT)</a></li></ul><h4 id=\"from-others\">From Others</h4><ul id=\"from-others-list\"><li><a href=\"https://graffioh.com/\">bertø (@graffioh)</a></li></ul><audio id=\"noise\" loop controls src=\"/assets/audio/noise.mp3\"></audio></div><script src=\"/assets/js/index.js\"></script></body></html>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html lang=\"en\" data-theme=\"dark\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><meta name=\"google\" content=\"notranslate\"><title>Basement </title><link rel=\"icon\" type=\"image/svg+xml\" href=\"/assets/img/favicon.ico\"><link rel=\"stylesheet\" type=\"text/css\" href=\"/assets/css/styles.css\"><link rel=\"stylesheet\" type=\"text/css\" href=\"/assets/css/special-styles.css\"><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link href=\"https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&amp;display=swap\" rel=\"stylesheet\"></head><body class=\"flex flex-col bg-[#0F0F0F] overflow-x-hidden text-white p-10\"><div class=\"mx-auto w-full bg-center bg-cover md:w-7/12 min-h-48\" style=\"background-image: url(assets/img/kyubey.png);\"></div><h1 class=\"mx-auto mt-2 text-4xl heading-primary font-kr\">누구세요?</h1>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = HoursCounter().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"links-list\" class=\"flex flex-col mt-5\"><h2 id=\"papers-articles-books\" class=\"heading-primary\">Papers / Articles / Books</h2><ul><li><p>[ ]  <a href=\"https://efrei.poupa.net/programmation%20en%20c/cours/the_c_puzzle_book.pdf\">★★★★★ | The C puzzle book</a></p></li><li><p>[ ]  <a href=\"https://www.cis.upenn.edu/~cis5150/linalg-I-f.pdf\">★★★★★ | Linear Algebra for Computer Vision, Robotics, and Machine Learning</a></p></li><li><p>[ ]  <a href=\"https://jeffe.cs.illinois.edu/teaching/algorithms/\">★★★★★ | Algorithms</a></p></li><li><p>[ ]  <a href=\"https://siboehm.com/articles/22/Fast-MMM-on-CPU\">★★★★★ | Fast Multidimensional Matrix Multiplication on CPU from Scratch</a></p></li><li><p>[ ]  <a href=\"https://people.freebsd.org/~lstewart/articles/cpumemory.pdf\">★★★★☆ | What every programmer should know about memory</a></p></li><li><p>[ ]  <a href=\"https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf\">★★★★☆ | MapReduce: Simplified Data Processing on Large Clusters</a></p></li><li><p>[ ] <a href=\"https://raytracing.github.io/\">★★★★☆ | ray tracing in one week</a></p></li><li><p>[112/495] ★★★☆☆ | Let's Go - Alex Edwards</p></li><li><p>[ ] ★★★★☆ | Let's Go Further - Alex Edwards</p></li></ul><h2 id=\"less-than-1-hour-reads\" class=\"heading-primary\">Less than 1 hour reads</h2><ul><li><p>[ ]  <a href=\"https://deno.com/blog/http-imports\">What we got wrong about HTTP imports</a></p></li><li><p>[ ]  <a href=\"https://anishathalye.com/managing-your-dotfiles/\">Managing your dotfiles</a></p></li><li><p>[ ]  <a href=\"https://thesquareplanet.com/blog/eisenhower-vectors/\">Eisenhower Vectors</a></p></li><li><p>[ ]  <a href=\"https://thesquareplanet.com/blog/how-the-internet-works/\">How the internet works</a></p></li><li><p>[ ]  <a href=\"https://ismailefe.org/blog/why_use_emacs/\">Why use emacs</a></p></li><li><p>[ ]  <a href=\"https://blog.teamtreehouse.com/go-interfaces-awesome\">Go Interfaces are awesome</a></p></li><li><p>[ ]  <a href=\"https://benhoyt.com/writings/how-to-apply/\">How (not) to apply for a software job</a></p></li><li><p>[ ]  <a href=\"https://benhoyt.com/writings/go-routing/\">Different approaches to HTTP routing in Go</a></p></li><li><p>[ ]  <a href=\"https://www.0x65.dev/blog/2019-12-06/building-a-search-engine-from-scratch.html\">Building a search engine from scratch</a></p></li></ul><h2 id=\"videos\" class=\"heading-primary\">Videos</h2><ul><li>[ ]  <a href=\"https://www.youtube.com/watch?v=z56jmr9z34q&amp;list=plyzovjj3bhqulokgg59rs43e29ro7i57j&amp;index=3\">★★★★★ | MIT CS Classes</a></li><li>[ ]  <a href=\"https://www.youtube.com/watch?v=HaBMAD-Dr8M&amp;list=PLnAxReCloSeTJc8ZGogzjtCtXl_eE6yzA\">★★★☆☆ | How Computers Work - Building Scott&#39;s CPU</a></li></ul><h2 id=\"full-blogs\" class=\"heading-primary\">Full Blogs</h2><h4 id=\"from-x\" class=\"heading-primary\">From X</h4><ul><li><a href=\"https://graffioh.com/\">bertø (@graffioh)</a></li></ul><h4 id=\"from-college-material\" class=\"heading-primary\">From College Material</h4><ul><li><a href=\"https://anishathalye.com/\">Anish Athalye (MIT)</a></li><li><a href=\"https://thesquareplanet.com/blog/\">Jon Gjengset (MIT)</a></li></ul><h4 id=\"from-others\">From Others</h4><ul id=\"from-others-list\"><li><a href=\"https://graffioh.com/\">bertø (@graffioh)</a></li></ul><audio id=\"noise\" loop controls src=\"/assets/audio/noise.mp3\"></audio></div><script src=\"/assets/js/index.js\"></script></body></html>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return templ_7745c5c3_Err
+	})
+}
+
+func HoursCounter() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var2 == nil {
+			templ_7745c5c3_Var2 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex flex-col mx-auto mt-5\"><div class=\"flex overvflow-x-hidden\"><div class=\"grid mr-2\" style=\"grid-template-rows: repeat(1, 0.75rem);\"><span class=\"text-xs text-center leading-[.9rem]\">S</span> <span class=\"text-xs text-center leading-[.9rem]\">M</span> <span class=\"text-xs text-center leading-[.9rem]\">T</span> <span class=\"text-xs text-center leading-[.9rem]\">W</span> <span class=\"text-xs text-center leading-[.9rem]\">T</span> <span class=\"text-xs text-center leading-[.9rem]\">F</span> <span class=\"text-xs text-center leading-[.9rem]\">S</span></div><div class=\"grid grid-flow-col gap-1\" style=\"grid-template-rows: repeat(7, 0.75rem);\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		for i := 0; i < 365; i++ {
+			if i == 0 {
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"relative row-start-2 bg-gray-800 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">X minutes studied/worked on ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var3 string
+				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(i))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 251, Col: 54}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(".</p></div></div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			} else {
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"relative bg-gray-800 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">X minutes studied/worked on ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var4 string
+				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(i))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 259, Col: 54}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(".</p></div></div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div><div class=\"flex justify-end items-end mt-2 mr-5 space-x-1\"><div class=\"text-center leading-[.9rem]\">Less</div><div class=\"grid gap-y-0.5 gap-x-1\" style=\"grid-template-columns: repeat(6, 0.75rem);\"><div class=\"relative bg-gray-800 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">Less than 1 hour studied/worked.</p></div></div><div class=\"relative bg-green-800 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">1-2 hours studied/worked.</p></div></div><div class=\"relative bg-green-700 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">2-3 hours studied/worked.</p></div></div><div class=\"relative bg-green-600 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">3-4 hours studied/worked.</p></div></div><div class=\"relative bg-green-400 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">4-5 hours studied/worked.</p></div></div><div class=\"relative bg-amber-400 rounded-sm group size-3 shiny\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">5+ hours studied/worked. Perfect!</p></div></div></div><div class=\"text-center leading-[.9rem]\">More</div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
