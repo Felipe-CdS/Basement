@@ -8,6 +8,8 @@ links = [
   "https://vlimki.dev/",
   "https://adueck.github.io/blog/",
   "https://world.hey.com/dhh/",
+  "https://lelouch.dev/",
+  "https://vin.gg/",
 ];
 
 function addItems() {
@@ -25,3 +27,5 @@ function addItems() {
 }
 
 addItems();
+
+document.getElementById("noise").volume = 0.15;
