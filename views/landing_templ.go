@@ -8,9 +8,14 @@ package views
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "strconv"
+import (
+	"fmt"
+	"nugu.dev/basement/pkg/models"
+	"strconv"
+	"time"
+)
 
-func LandingPageView() templ.Component {
+func LandingPageView(list []models.DayStats) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
@@ -28,11 +33,11 @@ func LandingPageView() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html lang=\"en\" data-theme=\"dark\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><meta name=\"google\" content=\"notranslate\"><title>Basement </title><link rel=\"icon\" type=\"image/svg+xml\" href=\"/assets/img/favicon.ico\"><link rel=\"stylesheet\" type=\"text/css\" href=\"/assets/css/styles.css\"><link rel=\"stylesheet\" type=\"text/css\" href=\"/assets/css/special-styles.css\"><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link href=\"https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&amp;display=swap\" rel=\"stylesheet\"></head><body class=\"flex flex-col bg-[#0F0F0F] overflow-x-hidden text-white p-10\"><div class=\"mx-auto w-full bg-center bg-cover md:w-7/12 min-h-48\" style=\"background-image: url(assets/img/kyubey.png);\"></div><h1 class=\"mx-auto mt-2 text-4xl heading-primary font-kr\">누구세요?</h1>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html lang=\"en\" data-theme=\"dark\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><meta name=\"google\" content=\"notranslate\"><title>Basement </title><link rel=\"icon\" type=\"image/svg+xml\" href=\"/assets/img/favicon.ico\"><link rel=\"stylesheet\" type=\"text/css\" href=\"/assets/css/styles.css\"><link rel=\"stylesheet\" type=\"text/css\" href=\"/assets/css/special-styles.css\"><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link href=\"https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&amp;display=swap\" rel=\"stylesheet\"></head><body class=\"w-screen flex flex-col bg-[#0F0F0F] overflow-x-hidden text-white p-10\"><div class=\"mx-auto w-full bg-center bg-cover lg:w-7/12 min-h-48\" style=\"background-image: url(assets/img/kyubey.png);\"></div><h1 class=\"mx-auto mt-2 text-4xl heading-primary font-kr\">누구세요?</h1>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = HoursCounter().Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = HoursCounter(list).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -44,7 +49,7 @@ func LandingPageView() templ.Component {
 	})
 }
 
-func HoursCounter() templ.Component {
+func HoursCounter(list []models.DayStats) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
@@ -62,20 +67,20 @@ func HoursCounter() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex flex-col mx-auto mt-5\"><div class=\"flex overvflow-x-hidden\"><div class=\"grid mr-2\" style=\"grid-template-rows: repeat(1, 0.75rem);\"><span class=\"text-xs text-center leading-[.9rem]\">S</span> <span class=\"text-xs text-center leading-[.9rem]\">M</span> <span class=\"text-xs text-center leading-[.9rem]\">T</span> <span class=\"text-xs text-center leading-[.9rem]\">W</span> <span class=\"text-xs text-center leading-[.9rem]\">T</span> <span class=\"text-xs text-center leading-[.9rem]\">F</span> <span class=\"text-xs text-center leading-[.9rem]\">S</span></div><div class=\"grid grid-flow-col gap-1\" style=\"grid-template-rows: repeat(7, 0.75rem);\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex flex-col pt-4 pb-2 mx-auto mt-5 w-full md:px-4 lg:w-auto\"><h1 class=\"mb-2 text-lg font-medium\">0 hours studied/worked in 2024</h1><div class=\"flex flex-col py-4 px-4 space-y-2 w-full rounded border border-gray-500 md:py-2\"><div class=\"flex flex-col justify-around lg:flex-row\"><h1 class=\"text-lg font-medium\">Daily Average:&nbsp; <span class=\"float-right\">0 hours</span></h1><h1 class=\"text-lg font-medium\">Days Learned:&nbsp; <span class=\"float-right\">0%</span></h1><h1 class=\"text-lg font-medium\">Current Streak:&nbsp; <span class=\"float-right\">0 days</span></h1><h1 class=\"text-lg font-medium\">Longest Streak:&nbsp; <span class=\"float-right\">0 days</span></h1></div><div class=\"flex overflow-x-scroll w-full lg:overflow-x-visible\"><div class=\"grid mr-2\" style=\"grid-template-rows: repeat(1, 0.75rem);\"><span class=\"text-xs text-center leading-[.9rem]\">S</span> <span class=\"text-xs text-center leading-[.9rem]\">M</span> <span class=\"text-xs text-center leading-[.9rem]\">T</span> <span class=\"text-xs text-center leading-[.9rem]\">W</span> <span class=\"text-xs text-center leading-[.9rem]\">T</span> <span class=\"text-xs text-center leading-[.9rem]\">F</span> <span class=\"text-xs text-center leading-[.9rem]\">S</span></div><div class=\"grid grid-flow-col gap-1 select-none\" style=\"grid-template-rows: repeat(7, 0.75rem);\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		for i := 0; i < 365; i++ {
+		for i := 0; i < 366-len(list); i++ {
 			if i == 0 {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"relative row-start-2 bg-gray-800 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">X minutes studied/worked on ")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"relative row-start-2 bg-gray-800 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:flex group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">X minutes studied/worked on ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(i))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 251, Col: 54}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 284, Col: 55}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -86,14 +91,14 @@ func HoursCounter() templ.Component {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"relative bg-gray-800 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">X minutes studied/worked on ")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"relative bg-gray-800 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:flex group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">X minutes studied/worked on ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(i))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 259, Col: 54}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 292, Col: 55}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -105,7 +110,39 @@ func HoursCounter() templ.Component {
 				}
 			}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div><div class=\"flex justify-end items-end mt-2 mr-5 space-x-1\"><div class=\"text-center leading-[.9rem]\">Less</div><div class=\"grid gap-y-0.5 gap-x-1\" style=\"grid-template-columns: repeat(6, 0.75rem);\"><div class=\"relative bg-gray-800 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">Less than 1 hour studied/worked.</p></div></div><div class=\"relative bg-green-800 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">1-2 hours studied/worked.</p></div></div><div class=\"relative bg-green-700 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">2-3 hours studied/worked.</p></div></div><div class=\"relative bg-green-600 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">3-4 hours studied/worked.</p></div></div><div class=\"relative bg-green-400 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">4-5 hours studied/worked.</p></div></div><div class=\"relative bg-amber-400 rounded-sm group size-3 shiny\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">5+ hours studied/worked. Perfect!</p></div></div></div><div class=\"text-center leading-[.9rem]\">More</div></div></div>")
+		for _, s := range list {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"relative bg-green-800 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:flex group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var5 string
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", s.Study))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 302, Col: 37}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" minutes studied/worked on ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var6 string
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%s", s.Date.Format(time.DateOnly)))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 302, Col: 115}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(".</p></div></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div><div class=\"flex flex-col-reverse justify-between md:flex-row md:px-7\"><a class=\"mx-auto underline transition duration-75 cursor-pointer md:ml-0 hover:text-blue-400\">How these times are calculated?</a><div class=\"flex mx-auto space-x-1 md:mr-0\"><div class=\"\">Less</div><div class=\"grid gap-x-1 items-center\" style=\"grid-template-columns: repeat(6, 0.75rem);\"><div class=\"relative bg-gray-800 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">Less than 1 hour studied/worked.</p></div></div><div class=\"relative bg-green-800 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">1-2 hours studied/worked.</p></div></div><div class=\"relative bg-green-700 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">2-3 hours studied/worked.</p></div></div><div class=\"relative bg-green-600 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">3-4 hours studied/worked.</p></div></div><div class=\"relative bg-green-400 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">4-5 hours studied/worked.</p></div></div><div class=\"relative bg-amber-400 rounded-sm group size-3 shiny\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">5+ hours studied/worked. Perfect!</p></div></div></div><div class=\"\">More</div></div></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

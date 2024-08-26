@@ -1,8 +1,13 @@
 package views
 
-import "strconv"
+import (
+	"fmt"
+	"nugu.dev/basement/pkg/models"
+	"strconv"
+	"time"
+)
 
-templ LandingPageView() {
+templ LandingPageView(list []models.DayStats) {
 	<!DOCTYPE html>
 	<html lang="en" data-theme="dark">
 		<head>
@@ -17,15 +22,15 @@ templ LandingPageView() {
 			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 			<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet"/>
 		</head>
-		<body class="flex flex-col bg-[#0F0F0F] overflow-x-hidden text-white p-10">
+		<body class="w-screen flex flex-col bg-[#0F0F0F] overflow-x-hidden text-white p-10">
 			<div
-				class="mx-auto w-full bg-center bg-cover md:w-7/12 min-h-48"
+				class="mx-auto w-full bg-center bg-cover lg:w-7/12 min-h-48"
 				style="background-image: url(assets/img/kyubey.png);"
 			></div>
 			<h1 class="mx-auto mt-2 text-4xl heading-primary font-kr">
 				누구세요?
 			</h1>
-			@HoursCounter()
+			@HoursCounter(list)
 			<div id="links-list" class="flex flex-col mt-5">
 				<h2 id="papers-articles-books" class="heading-primary">
 					Papers / Articles / Books
@@ -230,87 +235,128 @@ templ LandingPageView() {
 	</html>
 }
 
-templ HoursCounter() {
-	<div class="flex flex-col mx-auto mt-5">
-		<div class="flex overvflow-x-hidden">
-			<div class="grid mr-2" style="grid-template-rows: repeat(1, 0.75rem);">
-				<span class="text-xs text-center leading-[.9rem]">S</span>
-				<span class="text-xs text-center leading-[.9rem]">M</span>
-				<span class="text-xs text-center leading-[.9rem]">T</span>
-				<span class="text-xs text-center leading-[.9rem]">W</span>
-				<span class="text-xs text-center leading-[.9rem]">T</span>
-				<span class="text-xs text-center leading-[.9rem]">F</span>
-				<span class="text-xs text-center leading-[.9rem]">S</span>
+templ HoursCounter(list []models.DayStats) {
+	<div class="flex flex-col pt-4 pb-2 mx-auto mt-5 w-full md:px-4 lg:w-auto">
+		<h1 class="mb-2 text-lg font-medium">0 hours studied/worked in 2024</h1>
+		<div class="flex flex-col py-4 px-4 space-y-2 w-full rounded border border-gray-500 md:py-2">
+			<div class="flex flex-col justify-around lg:flex-row">
+				<h1 class="text-lg font-medium">
+					Daily Average:&nbsp;
+					<span class="float-right">
+						0 hours
+					</span>
+				</h1>
+				<h1 class="text-lg font-medium">
+					Days Learned:&nbsp;
+					<span class="float-right">
+						0%
+					</span>
+				</h1>
+				<h1 class="text-lg font-medium">
+					Current Streak:&nbsp;
+					<span class="float-right">
+						0 days
+					</span>
+				</h1>
+				<h1 class="text-lg font-medium">
+					Longest Streak:&nbsp;
+					<span class="float-right">
+						0 days
+					</span>
+				</h1>
 			</div>
-			<div class="grid grid-flow-col gap-1" style="grid-template-rows: repeat(7, 0.75rem);">
-				for i := 0; i < 365; i++ {
-					if i == 0 {
-						<div class="relative row-start-2 bg-gray-800 rounded-sm size-3 group">
-							<div class="shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble">
-								<p class="whitespace-nowrap">
-									X minutes studied/worked on { strconv.Itoa(i) }.
-								</p>
+			<div class="flex overflow-x-scroll w-full lg:overflow-x-visible">
+				<div class="grid mr-2" style="grid-template-rows: repeat(1, 0.75rem);">
+					<span class="text-xs text-center leading-[.9rem]">S</span>
+					<span class="text-xs text-center leading-[.9rem]">M</span>
+					<span class="text-xs text-center leading-[.9rem]">T</span>
+					<span class="text-xs text-center leading-[.9rem]">W</span>
+					<span class="text-xs text-center leading-[.9rem]">T</span>
+					<span class="text-xs text-center leading-[.9rem]">F</span>
+					<span class="text-xs text-center leading-[.9rem]">S</span>
+				</div>
+				<div class="grid grid-flow-col gap-1 select-none" style="grid-template-rows: repeat(7, 0.75rem);">
+					for i := 0; i < 366 - len(list); i++ {
+						if i == 0 {
+							<div class="relative row-start-2 bg-gray-800 rounded-sm size-3 group">
+								<div class="shadow transition duration-150 -translate-x-1/2 group-hover:flex group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble">
+									<p class="whitespace-nowrap">
+										X minutes studied/worked on { strconv.Itoa(i) }.
+									</p>
+								</div>
 							</div>
-						</div>
-					} else {
-						<div class="relative bg-gray-800 rounded-sm size-3 group">
-							<div class="shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble">
+						} else {
+							<div class="relative bg-gray-800 rounded-sm size-3 group">
+								<div class="shadow transition duration-150 -translate-x-1/2 group-hover:flex group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble">
+									<p class="whitespace-nowrap">
+										X minutes studied/worked on { strconv.Itoa(i) }.
+									</p>
+								</div>
+							</div>
+						}
+					}
+					for _, s := range list {
+						<div class="relative bg-green-800 rounded-sm size-3 group">
+							<div class="shadow transition duration-150 -translate-x-1/2 group-hover:flex group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble">
 								<p class="whitespace-nowrap">
-									X minutes studied/worked on { strconv.Itoa(i) }.
+									{ fmt.Sprintf("%d", s.Study) } minutes studied/worked on { fmt.Sprintf("%s", s.Date.Format(time.DateOnly)) }.
 								</p>
 							</div>
 						</div>
 					}
-				}
-			</div>
-		</div>
-		<div class="flex justify-end items-end mt-2 mr-5 space-x-1">
-			<div class="text-center leading-[.9rem]">Less</div>
-			<div class="grid gap-y-0.5 gap-x-1" style="grid-template-columns: repeat(6, 0.75rem);">
-				<div class="relative bg-gray-800 rounded-sm size-3 group">
-					<div class="shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble">
-						<p class="whitespace-nowrap">
-							Less than 1 hour studied/worked.
-						</p>
-					</div>
-				</div>
-				<div class="relative bg-green-800 rounded-sm size-3 group">
-					<div class="shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble">
-						<p class="whitespace-nowrap">
-							1-2 hours studied/worked.
-						</p>
-					</div>
-				</div>
-				<div class="relative bg-green-700 rounded-sm size-3 group">
-					<div class="shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble">
-						<p class="whitespace-nowrap">
-							2-3 hours studied/worked.
-						</p>
-					</div>
-				</div>
-				<div class="relative bg-green-600 rounded-sm size-3 group">
-					<div class="shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble">
-						<p class="whitespace-nowrap">
-							3-4 hours studied/worked.
-						</p>
-					</div>
-				</div>
-				<div class="relative bg-green-400 rounded-sm size-3 group">
-					<div class="shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble">
-						<p class="whitespace-nowrap">
-							4-5 hours studied/worked.
-						</p>
-					</div>
-				</div>
-				<div class="relative bg-amber-400 rounded-sm group size-3 shiny">
-					<div class="shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble">
-						<p class="whitespace-nowrap">
-							5+ hours studied/worked. Perfect!
-						</p>
-					</div>
 				</div>
 			</div>
-			<div class="text-center leading-[.9rem]">More</div>
+			<div class="flex flex-col-reverse justify-between md:flex-row md:px-7">
+				<a class="mx-auto underline transition duration-75 cursor-pointer md:ml-0 hover:text-blue-400">How these times are calculated?</a>
+				<div class="flex mx-auto space-x-1 md:mr-0">
+					<div class="">Less</div>
+					<div class="grid gap-x-1 items-center" style="grid-template-columns: repeat(6, 0.75rem);">
+						<div class="relative bg-gray-800 rounded-sm size-3 group">
+							<div class="shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble">
+								<p class="whitespace-nowrap">
+									Less than 1 hour studied/worked.
+								</p>
+							</div>
+						</div>
+						<div class="relative bg-green-800 rounded-sm size-3 group">
+							<div class="shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble">
+								<p class="whitespace-nowrap">
+									1-2 hours studied/worked.
+								</p>
+							</div>
+						</div>
+						<div class="relative bg-green-700 rounded-sm size-3 group">
+							<div class="shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble">
+								<p class="whitespace-nowrap">
+									2-3 hours studied/worked.
+								</p>
+							</div>
+						</div>
+						<div class="relative bg-green-600 rounded-sm size-3 group">
+							<div class="shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble">
+								<p class="whitespace-nowrap">
+									3-4 hours studied/worked.
+								</p>
+							</div>
+						</div>
+						<div class="relative bg-green-400 rounded-sm size-3 group">
+							<div class="shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble">
+								<p class="whitespace-nowrap">
+									4-5 hours studied/worked.
+								</p>
+							</div>
+						</div>
+						<div class="relative bg-amber-400 rounded-sm group size-3 shiny">
+							<div class="shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble">
+								<p class="whitespace-nowrap">
+									5+ hours studied/worked. Perfect!
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="">More</div>
+				</div>
+			</div>
 		</div>
 	</div>
 }

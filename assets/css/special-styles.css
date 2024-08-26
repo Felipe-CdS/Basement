@@ -1,5 +1,5 @@
 .speech-bubble {
-	display:flex;
+	display:none;
 
 	opacity: 0;
 	position: absolute;

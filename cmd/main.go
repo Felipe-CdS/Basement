@@ -2,14 +2,30 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+
+	"nugu.dev/basement/pkg/models/postgres"
 )
 
-func main() {
-	fs := http.FileServer(http.Dir("./assets"))
-	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
+type application struct {
+	activities *postgres.ActivityModel
+	dayStats   *postgres.DayStatsModel
+}
 
-	http.HandleFunc("/", Landing)
+func main() {
+
+	app := &application{
+		activities: &postgres.ActivityModel{Db: postgres.NewPostgresDB()},
+		dayStats:   &postgres.DayStatsModel{Db: postgres.NewPostgresDB()},
+	}
+
+	srv := &http.Server{
+		Addr:    ":3000",
+		Handler: app.routes(),
+	}
+
 	fmt.Println("Server Working...")
-	http.ListenAndServe(":3000", nil)
+	err := srv.ListenAndServe()
+	log.Fatalln(err)
 }
