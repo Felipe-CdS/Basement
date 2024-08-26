@@ -11,7 +11,6 @@ import templruntime "github.com/a-h/templ/runtime"
 import (
 	"fmt"
 	"nugu.dev/basement/pkg/models"
-	"strconv"
 	"time"
 )
 
@@ -67,85 +66,173 @@ func HoursCounter(list []models.DayStats) templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex flex-col pt-4 pb-2 mx-auto mt-5 w-full md:px-4 lg:w-auto\"><h1 class=\"mb-2 text-lg font-medium\">0 hours studied/worked in 2024</h1><div class=\"flex flex-col py-4 px-4 space-y-2 w-full rounded border border-gray-500 md:py-2\"><div class=\"flex flex-col justify-around lg:flex-row\"><h1 class=\"text-lg font-medium\">Daily Average:&nbsp; <span class=\"float-right\">0 hours</span></h1><h1 class=\"text-lg font-medium\">Days Learned:&nbsp; <span class=\"float-right\">0%</span></h1><h1 class=\"text-lg font-medium\">Current Streak:&nbsp; <span class=\"float-right\">0 days</span></h1><h1 class=\"text-lg font-medium\">Longest Streak:&nbsp; <span class=\"float-right\">0 days</span></h1></div><div class=\"flex overflow-x-scroll w-full lg:overflow-x-visible\"><div class=\"grid mr-2\" style=\"grid-template-rows: repeat(1, 0.75rem);\"><span class=\"text-xs text-center leading-[.9rem]\">S</span> <span class=\"text-xs text-center leading-[.9rem]\">M</span> <span class=\"text-xs text-center leading-[.9rem]\">T</span> <span class=\"text-xs text-center leading-[.9rem]\">W</span> <span class=\"text-xs text-center leading-[.9rem]\">T</span> <span class=\"text-xs text-center leading-[.9rem]\">F</span> <span class=\"text-xs text-center leading-[.9rem]\">S</span></div><div class=\"grid grid-flow-col gap-1 select-none\" style=\"grid-template-rows: repeat(7, 0.75rem);\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex flex-col pt-4 pb-2 mx-auto mt-5 w-full md:px-4 lg:w-auto\"><h1 class=\"mb-2 text-lg font-medium\">0 hours studied/worked in 2024</h1><div class=\"flex flex-col py-4 px-4 space-y-2 w-full rounded border border-gray-500 md:py-2\"><div class=\"flex flex-col justify-around lg:flex-row\"><h1 class=\"text-lg font-medium\">Daily Average:&nbsp; <span class=\"float-right\">0 hours</span></h1><h1 class=\"text-lg font-medium\">Days Learned:&nbsp; <span class=\"float-right\">0%</span></h1><h1 class=\"text-lg font-medium\">Current Streak:&nbsp; <span class=\"float-right\">0 days</span></h1><h1 class=\"text-lg font-medium\">Longest Streak:&nbsp; <span class=\"float-right\">0 days</span></h1></div><div class=\"flex overflow-x-scroll w-full lg:overflow-x-visible\"><div class=\"grid mr-2\" style=\"grid-template-rows: repeat(1, 0.75rem);\"><span class=\"text-xs text-center leading-[.9rem]\">S</span> <span class=\"text-xs text-center leading-[.9rem]\">M</span> <span class=\"text-xs text-center leading-[.9rem]\">T</span> <span class=\"text-xs text-center leading-[.9rem]\">W</span> <span class=\"text-xs text-center leading-[.9rem]\">T</span> <span class=\"text-xs text-center leading-[.9rem]\">F</span> <span class=\"text-xs text-center leading-[.9rem]\">S</span></div><div id=\"status-grid\" class=\"grid grid-flow-col gap-1 select-none\" style=\"grid-template-rows: repeat(7, 0.75rem);\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		for i := 0; i < 366-len(list); i++ {
-			if i == 0 {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"relative row-start-2 bg-gray-800 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:flex group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">X minutes studied/worked on ")
+		for i := 0; i < 366; i++ {
+			switch {
+			case i == 0 && i < list[0].Date.YearDay():
+				templ_7745c5c3_Err = EmptyDayBlock(i).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var3 string
-				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(i))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 284, Col: 55}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+			case i >= list[0].Date.YearDay()-1 && i <= list[len(list)-1].Date.YearDay()-1:
+				templ_7745c5c3_Err = Dayblock(list[0]).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(".</p></div></div>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			} else {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"relative bg-gray-800 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:flex group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">X minutes studied/worked on ")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var4 string
-				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(i))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 292, Col: 55}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(".</p></div></div>")
+			default:
+				templ_7745c5c3_Err = EmptyDayBlock(i).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
 		}
-		for _, s := range list {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"relative bg-green-800 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:flex group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var5 string
-			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", s.Study))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 302, Col: 37}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" minutes studied/worked on ")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var6 string
-			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%s", s.Date.Format(time.DateOnly)))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 302, Col: 115}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(".</p></div></div>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div><div class=\"flex flex-col-reverse justify-between md:flex-row md:px-7\"><a class=\"mx-auto underline transition duration-75 cursor-pointer md:ml-0 hover:text-blue-400\">How these times are calculated?</a><div class=\"flex mx-auto space-x-1 md:mr-0\"><div class=\"\">Less</div><div class=\"grid gap-x-1 items-center\" style=\"grid-template-columns: repeat(6, 0.75rem);\"><div class=\"relative bg-gray-800 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">Less than 1 hour studied/worked.</p></div></div><div class=\"relative bg-green-800 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">1-2 hours studied/worked.</p></div></div><div class=\"relative bg-green-700 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">2-3 hours studied/worked.</p></div></div><div class=\"relative bg-green-600 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">3-4 hours studied/worked.</p></div></div><div class=\"relative bg-green-400 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">4-5 hours studied/worked.</p></div></div><div class=\"relative bg-amber-400 rounded-sm group size-3 shiny\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">5+ hours studied/worked. Perfect!</p></div></div></div><div class=\"\">More</div></div></div></div></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div><div class=\"flex flex-col-reverse justify-between md:flex-row md:px-7\"><a class=\"mx-auto underline transition duration-75 cursor-pointer md:ml-0 hover:text-blue-400\">How these times are calculated?</a><div class=\"flex mx-auto space-x-1 md:mr-0\"><div class=\"\">Less</div><div class=\"grid gap-x-1 items-center\" style=\"grid-template-columns: repeat(7, 0.75rem);\"><div class=\"relative bg-gray-800 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:flex group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">Nothing studied/worked.</p></div></div><div class=\"relative bg-green-900 rounded-sm border border-green-700 size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:flex group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">1+ hour studied/worked.</p></div></div><div class=\"relative bg-green-700 rounded-sm border border-green-500 size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:flex group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">2+ hours studied/worked.</p></div></div><div class=\"relative bg-green-500 rounded-sm border border-green-300 size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:flex group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">3+ hours studied/worked.</p></div></div><div class=\"relative bg-green-300 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:flex group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">4+ hours studied/worked.</p></div></div><div class=\"relative bg-green-100 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:flex group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">5+ hours studied/worked.</p></div></div><div class=\"relative bg-amber-400 rounded-sm group size-3 shiny\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:flex group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">6+ hours studied/worked. Perfect!</p></div></div></div><div class=\"\">More</div></div></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		return templ_7745c5c3_Err
 	})
+}
+
+func Dayblock(s models.DayStats) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var3 == nil {
+			templ_7745c5c3_Var3 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		var templ_7745c5c3_Var4 = []any{getDayBlockColorClasses(s)}
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var4...)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var5 string
+		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var4).String())
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 1, Col: 0}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:flex group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var6 string
+		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", int((s.ProgrammingHobby+s.ProgrammingWork+s.Study+s.ReadStudy)/60)))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 356, Col: 99}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" minutes studied/worked on ")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var7 string
+		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%s", s.Date.Format(time.RFC822)[:10]))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 356, Col: 180}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</p></div></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return templ_7745c5c3_Err
+	})
+}
+
+func EmptyDayBlock(dateCount int) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var8 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var8 == nil {
+			templ_7745c5c3_Var8 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"relative bg-gray-800 rounded-sm size-3 group\"><div class=\"shadow transition duration-150 -translate-x-1/2 group-hover:flex group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble\"><p class=\"whitespace-nowrap\">0 minutes studied/worked on ")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var9 string
+		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(generateFormatedDateFromCount(dateCount))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 367, Col: 46}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</p></div></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return templ_7745c5c3_Err
+	})
+}
+
+func getDayBlockColorClasses(s models.DayStats) string {
+
+	finalStmt := "relative rounded-sm size-3 group"
+	totalSeconds := (s.ProgrammingHobby + s.ProgrammingWork + s.Study + s.ReadStudy) / 3600
+
+	switch {
+	case totalSeconds >= 6:
+		return fmt.Sprintf("%s %s", finalStmt, "bg-amber-400")
+	case totalSeconds >= 5:
+		return fmt.Sprintf("%s %s", finalStmt, "bg-green-100")
+	case totalSeconds >= 4:
+		return fmt.Sprintf("%s %s", finalStmt, "bg-green-300")
+	case totalSeconds >= 3:
+		return fmt.Sprintf("%s %s", finalStmt, "bg-green-500 border border-green-300")
+	case totalSeconds >= 2:
+		return fmt.Sprintf("%s %s", finalStmt, "bg-green-700 border border-green-500")
+	case totalSeconds >= 1:
+		return fmt.Sprintf("%s %s", finalStmt, "bg-green-900 border border-green-700")
+	default:
+		return fmt.Sprintf("%s %s", finalStmt, "bg-gray-800")
+	}
+}
+
+func generateFormatedDateFromCount(dateCount int) string {
+
+	january1 := time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC)
+	endDate := january1.AddDate(0, 0, dateCount).Format(time.RFC822)
+
+	return fmt.Sprintf("%s", endDate[:10])
 }
