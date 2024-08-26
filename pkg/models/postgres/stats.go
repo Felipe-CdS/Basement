@@ -22,13 +22,12 @@ func (a *DayStatsModel) Insert(date time.Time, duration int, aType models.Activi
 
 	if err == sql.ErrNoRows {
 
-		stmt = `INSERT INTO day_stats (id, date, date_count) VALUES ($1, $2, $3) RETURNING id`
+		stmt = `INSERT INTO day_stats (id, date) VALUES ($1, $2) RETURNING id`
 
 		err = a.Db.QueryRow(
 			stmt,
 			uuid.New(),
 			time.Now(),
-			int(time.Since(time.Date(date.Year(), 1, 1, 0, 0, 0, 0, time.UTC)).Hours()/24)+1,
 		).Scan(&id)
 
 		if err != nil {
