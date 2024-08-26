@@ -71,18 +71,25 @@ func HoursCounter(list []models.DayStats) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		for i := 0; i < 366; i++ {
-			switch {
-			case i == 0 && i < list[0].Date.YearDay():
-				templ_7745c5c3_Err = EmptyDayBlock(i).Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
+			if len(list) != 0 {
+				switch {
+				case i == 0 && i < list[0].Date.YearDay():
+					templ_7745c5c3_Err = EmptyDayBlock(i).Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				case i >= list[0].Date.YearDay()-1 && i <= list[len(list)-1].Date.YearDay()-1:
+					templ_7745c5c3_Err = Dayblock(list[0]).Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				default:
+					templ_7745c5c3_Err = EmptyDayBlock(i).Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
 				}
-			case i >= list[0].Date.YearDay()-1 && i <= list[len(list)-1].Date.YearDay()-1:
-				templ_7745c5c3_Err = Dayblock(list[0]).Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			default:
+			} else {
 				templ_7745c5c3_Err = EmptyDayBlock(i).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
@@ -140,7 +147,7 @@ func Dayblock(s models.DayStats) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", int((s.ProgrammingHobby+s.ProgrammingWork+s.Study+s.ReadStudy)/60)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 356, Col: 99}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 360, Col: 99}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -153,7 +160,7 @@ func Dayblock(s models.DayStats) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%s", s.Date.Format(time.RFC822)[:10]))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 356, Col: 180}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 360, Col: 180}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -192,7 +199,7 @@ func EmptyDayBlock(dateCount int) templ.Component {
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(generateFormatedDateFromCount(dateCount))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 367, Col: 46}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 371, Col: 46}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {

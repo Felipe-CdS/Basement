@@ -276,13 +276,17 @@ templ HoursCounter(list []models.DayStats) {
 				</div>
 				<div id="status-grid" class="grid grid-flow-col gap-1 select-none" style="grid-template-rows: repeat(7, 0.75rem);">
 					for i := 0; i < 366; i++ {
-						switch  {
-							case i == 0 && i < list[0].Date.YearDay():
-								@EmptyDayBlock(i)
-							case i >= list[0].Date.YearDay() -1 && i <= list[len(list) -1].Date.YearDay() -1:
-								@Dayblock(list[0])
-							default:
-								@EmptyDayBlock(i)
+						if len(list) != 0 {
+							switch  {
+								case i == 0 && i < list[0].Date.YearDay():
+									@EmptyDayBlock(i)
+								case i >= list[0].Date.YearDay() -1 && i <= list[len(list) -1].Date.YearDay() -1:
+									@Dayblock(list[0])
+								default:
+									@EmptyDayBlock(i)
+							}
+						} else {
+							@EmptyDayBlock(i)
 						}
 					}
 				</div>
