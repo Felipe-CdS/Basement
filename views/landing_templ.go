@@ -70,7 +70,7 @@ func HoursCounter(list []models.DayStats) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		for i := 0; i < 366; i++ {
+		for i := 1; i < 367; i++ {
 			if len(list) != 0 {
 				switch {
 				case i == 0 && i < list[0].Date.YearDay():
@@ -78,8 +78,8 @@ func HoursCounter(list []models.DayStats) templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-				case i >= list[0].Date.YearDay()-1 && i <= list[len(list)-1].Date.YearDay()-1:
-					templ_7745c5c3_Err = Dayblock(list[0]).Render(ctx, templ_7745c5c3_Buffer)
+				case i >= list[0].Date.YearDay() && i <= list[len(list)-1].Date.YearDay():
+					templ_7745c5c3_Err = Dayblock(list[i-list[0].Date.YearDay()]).Render(ctx, templ_7745c5c3_Buffer)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -145,22 +145,22 @@ func Dayblock(s models.DayStats) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
-		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", int((s.ProgrammingHobby+s.ProgrammingWork+s.Study+s.ReadStudy)/60)))
+		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%s", getTotalTime(s)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 360, Col: 99}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 360, Col: 40}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" minutes studied/worked on ")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" studied/worked on ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%s", s.Date.Format(time.RFC822)[:10]))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 360, Col: 180}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/landing.templ`, Line: 360, Col: 113}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -238,8 +238,20 @@ func getDayBlockColorClasses(s models.DayStats) string {
 
 func generateFormatedDateFromCount(dateCount int) string {
 
-	january1 := time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC)
+	january1 := time.Date(2023, 12, 31, 0, 0, 0, 0, time.UTC)
 	endDate := january1.AddDate(0, 0, dateCount).Format(time.RFC822)
 
 	return fmt.Sprintf("%s", endDate[:10])
+}
+
+func getTotalTime(s models.DayStats) string {
+
+	totalS := s.ProgrammingHobby + s.ProgrammingWork
+	totalS += s.Study
+	totalS += s.ReadStudy
+
+	totalH := totalS / 3600
+	totalM := totalS/60 - (totalH * 60)
+
+	return fmt.Sprintf("%dh %02dm", totalH, totalM)
 }

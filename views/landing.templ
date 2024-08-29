@@ -275,13 +275,13 @@ templ HoursCounter(list []models.DayStats) {
 					<span class="text-xs text-center leading-[.9rem]">S</span>
 				</div>
 				<div id="status-grid" class="grid grid-flow-col gap-1 select-none" style="grid-template-rows: repeat(7, 0.75rem);">
-					for i := 0; i < 366; i++ {
+					for i := 1; i < 367; i++ {
 						if len(list) != 0 {
 							switch  {
 								case i == 0 && i < list[0].Date.YearDay():
 									@EmptyDayBlock(i)
-								case i >= list[0].Date.YearDay() -1 && i <= list[len(list) -1].Date.YearDay() -1:
-									@Dayblock(list[0])
+								case i >= list[0].Date.YearDay() && i <= list[len(list)-1].Date.YearDay():
+									@Dayblock(list[i-list[0].Date.YearDay()])
 								default:
 									@EmptyDayBlock(i)
 							}
@@ -357,7 +357,7 @@ templ Dayblock(s models.DayStats) {
 	<div class={ getDayBlockColorClasses(s) }>
 		<div class="shadow transition duration-150 -translate-x-1/2 group-hover:flex group-hover:left-1/2 group-hover:opacity-100 delay-[10ms] speech-bubble">
 			<p class="whitespace-nowrap">
-				{ fmt.Sprintf("%d", int((s.ProgrammingHobby + s.ProgrammingWork + s.Study + s.ReadStudy) / 60)) } minutes studied/worked on { fmt.Sprintf("%s", s.Date.Format(time.RFC822)[:10]) }
+				{ fmt.Sprintf("%s", getTotalTime(s)) } studied/worked on { fmt.Sprintf("%s", s.Date.Format(time.RFC822)[:10]) }
 			</p>
 		</div>
 	</div>
@@ -399,8 +399,20 @@ func getDayBlockColorClasses(s models.DayStats) string {
 
 func generateFormatedDateFromCount(dateCount int) string {
 
-	january1 := time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC)
+	january1 := time.Date(2023, 12, 31, 0, 0, 0, 0, time.UTC)
 	endDate := january1.AddDate(0, 0, dateCount).Format(time.RFC822)
 
 	return fmt.Sprintf("%s", endDate[:10])
+}
+
+func getTotalTime(s models.DayStats) string {
+
+	totalS := s.ProgrammingHobby + s.ProgrammingWork
+	totalS += s.Study
+	totalS += s.ReadStudy
+
+	totalH := totalS / 3600
+	totalM := totalS/60 - (totalH * 60)
+
+	return fmt.Sprintf("%dh %02dm", totalH, totalM)
 }

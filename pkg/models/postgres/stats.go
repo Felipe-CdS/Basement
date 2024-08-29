@@ -65,7 +65,8 @@ func (a *DayStatsModel) GetByYear(year int) ([]models.DayStats, error) {
 
 	stmt := `SELECT date, study, programming_work, programming_hobby, read_study, read_fun, garbage
 		FROM day_stats 
-		WHERE date_part('year', date) = $1`
+		WHERE date_part('year', date) = $1
+		ORDER BY date ASC`
 
 	rows, err := a.Db.Query(stmt, year)
 
