@@ -5,7 +5,9 @@ import (
 	"time"
 )
 
-var errNoRecord = errors.New("models: no matching record found")
+var ErrNoRecord = errors.New("models: no matching record found")
+var ErrActityTypeNotFound = errors.New("models: activity type doesnt exist")
+var ErrAlreadyExists = errors.New("models: entry already exists")
 
 type ActivityEnum string
 
@@ -16,6 +18,7 @@ const (
 	ReadStudy        ActivityEnum = "read_study"
 	Garbage          ActivityEnum = "garbage"
 	ReadFun          ActivityEnum = "read_fun"
+	Korean           ActivityEnum = "korean"
 )
 
 type Activity struct {
@@ -26,7 +29,7 @@ type Activity struct {
 }
 
 type DayStats struct {
-	ID               string
+	ID               int
 	Date             time.Time
 	Study            int
 	ProgrammingWork  int
@@ -34,4 +37,5 @@ type DayStats struct {
 	ReadStudy        int
 	Garbage          int
 	ReadFun          int
+	Korean           int
 }

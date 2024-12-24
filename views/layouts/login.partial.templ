@@ -1,0 +1,19 @@
+package layouts_view
+
+templ Login() {
+	@Base() {
+		<dialog
+			open
+			class="self-center place-self-center p-3 rounded"
+		>
+			<form
+				class="flex flex-col space-y-2"
+				hx-post="login"
+				hx-target="body"
+			>
+				<input class="text-black rounded border border-black" name="p" type="password"/>
+				<button>Send</button>
+			</form>
+		</dialog>
+	}
+}

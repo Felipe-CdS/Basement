@@ -9,5 +9,8 @@
 	li {
 		@apply list-disc;
 	}
+	td, th {
+		@apply border border-gray-500 p-2 text-left;
+	}
 }
 

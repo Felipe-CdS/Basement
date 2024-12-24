@@ -1,0 +1,99 @@
+package dashboard_view
+
+import (
+	"nugu.dev/basement/pkg/models"
+	layouts_view "nugu.dev/basement/views/layouts"
+	"strconv"
+	"time"
+)
+
+templ Dashboard(list []models.DayStats) {
+	@layouts_view.Base() {
+		<form
+			autocomplete="off"
+			class="grid grid-cols-2 gap-y-3"
+		>
+			<label for="date">Date: </label>
+			<div class="grid grid-cols-3 gap-x-10">
+				<select name="year" id="year-input" type="number" class="py-1 px-2 bg-transparent border border-gray-500">
+					for i := 2024; i <= 2030; i++ {
+						<option value={ strconv.Itoa(i) }>{ strconv.Itoa(i) }</option>
+					}
+				</select>
+				<select name="month" id="month-input" type="number" class="py-1 px-2 bg-transparent border border-gray-500">
+					for i := 1; i <= 12; i++ {
+						if i == int(time.Now().Month()) {
+							<option selected value={ strconv.Itoa(i) }>{ strconv.Itoa(i) }</option>
+						} else {
+							<option value={ strconv.Itoa(i) }>{ strconv.Itoa(i) }</option>
+						}
+					}
+				</select>
+				<select name="day" id="day-input" type="number" class="py-1 px-2 bg-transparent border border-gray-500">
+					for i := 1; i <= 31; i++ {
+						if i == time.Now().Day() {
+							<option selected value={ strconv.Itoa(i) }>{ strconv.Itoa(i) }</option>
+						} else {
+							<option value={ strconv.Itoa(i) }>{ strconv.Itoa(i) }</option>
+						}
+					}
+				</select>
+			</div>
+			<!-- ################################# -->
+			<label for="type">Type: </label>
+			<select name="type" id="type-input" class="py-1 px-2 bg-transparent border border-gray-500">
+				<option selected value=""></option>
+				<option value="study">Study</option>
+				<option value="programming_work">Programming (Work) </option>
+				<option value="programming_hobby">Programming (Hobby) </option>
+				<option value="read_study">Reading (Study) </option>
+				<option value="read_fun">Reading (Fun) </option>
+				<option value="korean">Korean </option>
+				<option value="garbage">Garbage </option>
+			</select>
+			<!-- ################################# -->
+			<label for="time">Time: </label>
+			<div class="grid grid-cols-3 gap-x-10">
+				<select name="hours" id="hour-input" type="number" class="py-1 px-2 bg-transparent border border-gray-500">
+					for i := 0; i <= 24; i++ {
+						<option value={ strconv.Itoa(i) }>{ strconv.Itoa(i) }</option>
+					}
+				</select>
+				<select name="minutes" id="minute-input" type="number" class="py-1 px-2 bg-transparent border border-gray-500">
+					for i := 0; i <= 60; i++ {
+						<option value={ strconv.Itoa(i) }>{ strconv.Itoa(i) }</option>
+					}
+				</select>
+				<select name="seconds" id="second-input" type="number" class="py-1 px-2 bg-transparent border border-gray-500">
+					for i := 0; i <= 60; i++ {
+						<option value={ strconv.Itoa(i) }>{ strconv.Itoa(i) }</option>
+					}
+				</select>
+			</div>
+			<div class="grid grid-cols-4 col-span-2 gap-x-10">
+				<button
+					hx-post="/stat"
+					hx-target="#stats-table"
+					hx-target-error="#error-span"
+					hx-swap="beforeend"
+					type="submit"
+					class="py-1 px-2 bg-green-900 border border-gray-500"
+				>
+					Create 
+				</button>
+				<button
+					hx-patch="/stat"
+					hx-swap="outerHTML"
+					hx-target-error="#error-span"
+					type="submit"
+					class="py-1 px-2 bg-blue-900 border border-gray-500"
+				>
+					Update
+				</button>
+			</div>
+			<span id="error-span"></span>
+		</form>
+		<hr class="my-8 mx-auto w-full h-px bg-gray-200 border-0 align-center"/>
+		@StatsTable(list)
+	}
+}

@@ -1,0 +1,100 @@
+package gallery_view
+
+import (
+	"fmt"
+	layouts_view "nugu.dev/basement/views/layouts"
+)
+
+css bgImg(bucketURL string, imgName string) {
+	background-image: { fmt.Sprintf("url(%s%s)", bucketURL, imgName) };
+	background-color: #cccccc;
+}
+
+templ Gallery() {
+	@layouts_view.Base() {
+		<div class="flex mb-2 w-full">
+			<button
+				hx-get="/gallery"
+				hx-target="#gallery-view"
+			>
+				<img class="size-10 invert" src="/assets/img/list.svg"/>
+			</button>
+			<button
+				hx-get="/gallery?v=grid"
+				hx-target="#gallery-view"
+			>
+				<img class="size-10 invert" src="/assets/img/grid.svg"/>
+			</button>
+			<button @click="$refs.uploadDialog.showModal()">
+				<img class="size-10 invert" src="/assets/img/upload.svg"/>
+			</button>
+		</div>
+		<div id="gallery-view" class="flex flex-col">
+			<div class="grid grid-cols-6 gap-2 w-full auto-rows-[20rem]">
+				<img class="aspect-[9/16]" src="/assets/img/test.jpg"/>
+			</div>
+		</div>
+		@UploadDialog()
+	}
+}
+
+templ GridView(o []BucketBodyView, bucketURL string) {
+	<div class="grid grid-cols-6 gap-2 w-full auto-rows-[20rem]">
+		for _, x := range o {
+			<a
+				href={ templ.SafeURL(fmt.Sprintf("%s%s", bucketURL, x.Name)) }
+				class={ bgImg(bucketURL, x.Name), "bg-cover bg-center cursor-pointer" }
+			></a>
+		}
+	</div>
+}
+
+templ ListView(names []string, bucketURL string) {
+	for _, n := range names {
+		<a href={ templ.SafeURL(fmt.Sprintf("%s%s", bucketURL, n)) }>{ n }</a>
+	}
+}
+
+templ UploadDialog() {
+	<dialog
+		open
+		x-ref="uploadDialog"
+		class="self-center place-self-center p-3 rounded backdrop:bg-black backdrop:bg-opacity-40 backdrop:backdrop-blur-[2px]"
+	>
+		<div
+			x-data="{ dragOver: false }"
+			@drop.prevent="drop"
+			@dragover.prevent="dragOver = true"
+			@dragleave.prevent="dragOver = false"
+			class="p-3 border-2"
+		>
+			Drop Here
+			<img x-show="dragOver" class="size-10" src="/assets/img/grid.svg"/>
+		</div>
+		<form
+			id="upload-form"
+			class="flex flex-col items-center"
+			hx-encoding="multipart/form-data"
+			hx-put="/gallery"
+		>
+			<input id="files-input" multiple type="file"/>
+			<button>Upload </button>
+			<progress id="progress" value="0" max="100"></progress>
+		</form>
+		<script type="text/javascript">
+
+			htmx.on('#upload-form', 'htmx:xhr:progress', function(evt) {
+				htmx.find('#progress').setAttribute('value', evt.detail.loaded/evt.detail.total * 100)
+			});
+
+			function drop(ev) {
+				document.getElementById("files-input").files = ev.dataTransfer.files;
+			}
+
+		</script>
+	</dialog>
+}
+
+type BucketBodyView struct {
+	Name string `json:"name"`
+}

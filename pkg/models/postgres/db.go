@@ -83,14 +83,15 @@ func createMigrations(db *sql.DB) error {
 	}
 
 	statement = `CREATE TABLE IF NOT EXISTS day_stats (
-		id UUID PRIMARY KEY
-		, date DATE NOT NULL
-		, study INTEGER NOT NULL DEFAULT 0
-		, programming_work INTEGER NOT NULL DEFAULT 0
-		, programming_hobby INTEGER NOT NULL DEFAULT 0
-		, read_study INTEGER NOT NULL DEFAULT 0
-		, read_fun INTEGER NOT NULL DEFAULT 0
-		, garbage INTEGER NOT NULL DEFAULT 0
+		id SERIAL PRIMARY KEY
+		, date			DATE NOT NULL UNIQUE
+		, study			INTEGER NOT NULL DEFAULT 0
+		, programming_work	INTEGER NOT NULL DEFAULT 0
+		, programming_hobby	INTEGER NOT NULL DEFAULT 0
+		, read_study		INTEGER NOT NULL DEFAULT 0
+		, read_fun		INTEGER NOT NULL DEFAULT 0
+		, korean		INTEGER NOT NULL DEFAULT 0
+		, garbage		INTEGER NOT NULL DEFAULT 0
 	)`
 
 	_, err = db.Exec(statement)
