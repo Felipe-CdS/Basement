@@ -135,6 +135,7 @@ func (app *application) AddStatTime(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) Gallery(w http.ResponseWriter, r *http.Request) {
 
+	viewType := r.URL.Query().Get("v")
 	authToken, err := r.Cookie("t")
 
 	if err != nil || authToken.Value != app.AuthToken {
@@ -144,7 +145,28 @@ func (app *application) Gallery(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method == "PUT" {
-		PutInBucket()
+		if parseErr := r.ParseMultipartForm(32 << 20); parseErr != nil {
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			return
+		}
+
+		for _, fheaders := range r.MultipartForm.File {
+			for _, header := range fheaders {
+				f, openErr := header.Open()
+
+				if openErr != nil {
+					http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+					return
+				}
+
+				defer f.Close()
+
+				PutInBucket(app.RWBucketURL, f, header.Filename, int(header.Size))
+			}
+		}
+
+		component := gallery_view.SuccessDialog()
+		component.Render(r.Context(), w)
 		return
 	}
 
@@ -154,7 +176,7 @@ func (app *application) Gallery(w http.ResponseWriter, r *http.Request) {
 		htmxReq = false
 	}
 
-	if !htmxReq {
+	if !htmxReq || viewType == "" {
 		component := gallery_view.Gallery()
 		component.Render(r.Context(), w)
 		return
@@ -163,7 +185,7 @@ func (app *application) Gallery(w http.ResponseWriter, r *http.Request) {
 	namesList, err := GetBucketList(app.RWBucketURL)
 
 	// GridView
-	if r.URL.Query().Get("v") == "grid" {
+	if viewType == "grid" {
 		var component_objs []gallery_view.BucketBodyView
 
 		for _, x := range namesList {

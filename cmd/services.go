@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"mime/multipart"
 	"net/http"
 )
 
@@ -42,6 +43,29 @@ func GetBucketList(bucketURL string) ([]string, error) {
 	return namesList, nil
 }
 
-func PutInBucket() {
-	fmt.Println("akldsjksd")
+func PutInBucket(bucketURL string, fr multipart.File, fn string, fs int) error {
+
+	//setup the req
+	url := fmt.Sprintf("%s%s", bucketURL, fn)
+	req, err := http.NewRequest(http.MethodPut, url, fr)
+	req.ContentLength = int64(fs)
+
+	if err != nil {
+		return fmt.Errorf("Error creating request")
+	}
+
+	//exec the req and get the resp
+	resp, err := http.DefaultClient.Do(req)
+
+	if err != nil {
+		return fmt.Errorf("Error sending request to bucket...")
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("Resp status code: %d", resp.StatusCode)
+	}
+
+	return nil
 }

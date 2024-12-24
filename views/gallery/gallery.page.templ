@@ -29,11 +29,7 @@ templ Gallery() {
 				<img class="size-10 invert" src="/assets/img/upload.svg"/>
 			</button>
 		</div>
-		<div id="gallery-view" class="flex flex-col">
-			<div class="grid grid-cols-6 gap-2 w-full auto-rows-[20rem]">
-				<img class="aspect-[9/16]" src="/assets/img/test.jpg"/>
-			</div>
-		</div>
+		<div id="gallery-view" class="flex flex-col"></div>
 		@UploadDialog()
 	}
 }
@@ -47,39 +43,51 @@ templ GridView(o []BucketBodyView, bucketURL string) {
 			></a>
 		}
 	</div>
+	@UploadDialog()
 }
 
 templ ListView(names []string, bucketURL string) {
 	for _, n := range names {
 		<a href={ templ.SafeURL(fmt.Sprintf("%s%s", bucketURL, n)) }>{ n }</a>
 	}
+	@UploadDialog()
 }
 
 templ UploadDialog() {
 	<dialog
-		open
+		id="uploadDialog"
 		x-ref="uploadDialog"
-		class="self-center place-self-center p-3 rounded backdrop:bg-black backdrop:bg-opacity-40 backdrop:backdrop-blur-[2px]"
+		hx-swap-oob="outerHTML"
+		class="self-center place-self-center p-3 w-2/12 rounded backdrop:bg-black backdrop:bg-opacity-40 backdrop:backdrop-blur-[2px]"
 	>
+		<div class="flex justify-between items-center mb-3">
+			<h1 class="inline text-2xl font-medium">Send Files</h1>
+			<button x-on:click="$refs.uploadDialog.close()">
+				<img class="size-6" src="/assets/img/x.svg"/>
+			</button>
+		</div>
 		<div
+			id="recipient"
 			x-data="{ dragOver: false }"
 			@drop.prevent="drop"
 			@dragover.prevent="dragOver = true"
 			@dragleave.prevent="dragOver = false"
-			class="p-3 border-2"
+			class="flex flex-col justify-center p-3 mb-3 space-y-1 rounded border-2"
 		>
-			Drop Here
-			<img x-show="dragOver" class="size-10" src="/assets/img/grid.svg"/>
+			<p class="text-center">Drop Here</p>
 		</div>
 		<form
 			id="upload-form"
-			class="flex flex-col items-center"
+			class="flex flex-col items-center space-y-3"
 			hx-encoding="multipart/form-data"
 			hx-put="/gallery"
+			hx-target="#uploadDialog"
 		>
-			<input id="files-input" multiple type="file"/>
-			<button>Upload </button>
-			<progress id="progress" value="0" max="100"></progress>
+			<input name="files-input" hidden id="files-input" multiple type="file" autocomplete="off"/>
+			<button type="submit" class="p-2 w-full font-bold text-white bg-green-400 rounded">
+				Upload
+			</button>
+			<progress class="w-full rounded" id="progress" value="0" max="100"></progress>
 		</form>
 		<script type="text/javascript">
 
@@ -88,11 +96,45 @@ templ UploadDialog() {
 			});
 
 			function drop(ev) {
-				document.getElementById("files-input").files = ev.dataTransfer.files;
+				let files = ev.dataTransfer.files;
+				let recipientArea = document.getElementById("recipient");
+
+				recipientArea.innerHTML = "";
+
+				for(const i of files){
+					let p = document.createElement("p");
+					p.innerHTML = i.name;
+					recipientArea.appendChild(p);
+				}
+
+				document.getElementById("files-input").files = files;
 			}
 
 		</script>
 	</dialog>
+}
+
+templ SuccessDialog() {
+	<div class="flex justify-between items-center mb-3">
+		<h1 class="inline text-2xl font-medium">Send Files</h1>
+		<a href="/gallery">
+			<img class="size-6" src="/assets/img/x.svg"/>
+		</a>
+	</div>
+	<div class="flex flex-col justify-center items-center space-y-2">
+		<img class="size-12" src="/assets/img/success.svg"/>
+		<p class="text-xl font-medium text-center">Upload Done</p>
+		<div class="flex space-x-2 w-full">
+			<button
+				hx-get="/gallery?v=grid"
+				hx-target="#gallery-view"
+				x-on:click="$refs.uploadDialog.close()"
+				class="p-2 w-full font-bold text-center text-white bg-gray-400 rounded hover:bg-gray-600"
+			>
+				Go Grid
+			</button>
+		</div>
+	</div>
 }
 
 type BucketBodyView struct {
