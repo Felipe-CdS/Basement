@@ -10,6 +10,7 @@ templ Login() {
 				class="flex flex-col space-y-2"
 				hx-post="login"
 				hx-target="body"
+				hx-push-url="true"
 			>
 				<input class="text-black rounded border border-black" name="p" type="password"/>
 				<button>Send</button>

@@ -5,11 +5,11 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"nugu.dev/basement/pkg/models"
 	dashboard_view "nugu.dev/basement/views/dashboard"
-	gallery_view "nugu.dev/basement/views/gallery"
 	landing_view "nugu.dev/basement/views/landing"
 	layouts_view "nugu.dev/basement/views/layouts"
 )
@@ -133,76 +133,6 @@ func (app *application) AddStatTime(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (app *application) Gallery(w http.ResponseWriter, r *http.Request) {
-
-	viewType := r.URL.Query().Get("v")
-	authToken, err := r.Cookie("t")
-
-	if err != nil || authToken.Value != app.AuthToken {
-		component := layouts_view.Login()
-		component.Render(r.Context(), w)
-		return
-	}
-
-	if r.Method == "PUT" {
-		if parseErr := r.ParseMultipartForm(32 << 20); parseErr != nil {
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-			return
-		}
-
-		for _, fheaders := range r.MultipartForm.File {
-			for _, header := range fheaders {
-				f, openErr := header.Open()
-
-				if openErr != nil {
-					http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-					return
-				}
-
-				defer f.Close()
-
-				PutInBucket(app.RWBucketURL, f, header.Filename, int(header.Size))
-			}
-		}
-
-		component := gallery_view.SuccessDialog()
-		component.Render(r.Context(), w)
-		return
-	}
-
-	htmxReq, err := strconv.ParseBool(r.Header.Get("HX-Request"))
-
-	if err != nil {
-		htmxReq = false
-	}
-
-	if !htmxReq || viewType == "" {
-		component := gallery_view.Gallery()
-		component.Render(r.Context(), w)
-		return
-	}
-
-	namesList, err := GetBucketList(app.RWBucketURL)
-
-	// GridView
-	if viewType == "grid" {
-		var component_objs []gallery_view.BucketBodyView
-
-		for _, x := range namesList {
-			holder := gallery_view.BucketBodyView{Name: x}
-			component_objs = append(component_objs, holder)
-		}
-
-		component := gallery_view.GridView(component_objs, app.ReadBucketURL)
-		component.Render(r.Context(), w)
-		return
-	}
-
-	// ListView
-	component := gallery_view.ListView(namesList, app.ReadBucketURL)
-	component.Render(r.Context(), w)
-}
-
 func (app *application) Login(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "POST" {
@@ -213,10 +143,28 @@ func (app *application) Login(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		var redirectURL string
+		refererSplit := strings.Split(r.Header.Get("Referer"), "redirect=")
+
+		if len(refererSplit) > 1 {
+			//redirect query parameter exists
+			redirectURL = refererSplit[1]
+		} else {
+			//redirect query parameter doesnt exist, go /home
+			redirectURL = "/"
+		}
+
 		expiration := time.Now().Add(time.Hour)
 		cookie := http.Cookie{Name: "t", Value: app.AuthToken, Expires: expiration}
 		http.SetCookie(w, &cookie)
 
-		http.Redirect(w, r, r.Header["Referer"][0], http.StatusFound)
+		http.Redirect(w, r, redirectURL, http.StatusFound)
+		return
+	}
+
+	if r.Method == "GET" {
+		component := layouts_view.Login()
+		component.Render(r.Context(), w)
+		return
 	}
 }
