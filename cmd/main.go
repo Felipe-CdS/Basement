@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	"github.com/joho/godotenv"
 	"nugu.dev/basement/pkg/models/postgres"
@@ -20,16 +21,16 @@ type application struct {
 
 func main() {
 
-	if err := godotenv.Load(); err != nil {
-		log.Fatalln("No .env file found")
-	}
+	setEnvVars()
+
+	db := postgres.NewPostgresDB()
 
 	app := &application{
 		AuthToken:     "123",
 		ReadBucketURL: os.Getenv("PUBLIC_SINGLE_READ_BUCKET"),
 		RWBucketURL:   os.Getenv("PRIVATE_LIST_RW_BUCKET"),
-		activities:    &postgres.ActivityModel{Db: postgres.NewPostgresDB()},
-		dayStats:      &postgres.DayStatsModel{Db: postgres.NewPostgresDB()},
+		activities:    &postgres.ActivityModel{Db: db},
+		dayStats:      &postgres.DayStatsModel{Db: db},
 	}
 
 	srv := &http.Server{
@@ -40,4 +41,25 @@ func main() {
 	fmt.Println("Server Working...")
 	err := srv.ListenAndServe()
 	log.Fatalln(err)
+}
+
+func setEnvVars() {
+
+	env := os.Getenv("ENV")
+	envPath, _ := os.Getwd()
+
+	// In production the binary is controlled by systemd, so the path is "/".
+	// In this case we need to get the executable path and set the service
+	// environment to start as "ENV=PROD ./main".
+
+	if env == "PROD" {
+		envPath, _ = os.Executable()
+		envPath = filepath.Dir(envPath)
+	}
+
+	if err := godotenv.Load(filepath.Join(envPath, ".env")); err != nil {
+		log.Fatalln("No .env file found. Path:", envPath)
+	} else {
+		log.Println("Environment variables found. Path:", envPath)
+	}
 }
