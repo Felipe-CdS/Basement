@@ -49,6 +49,7 @@ func PutInBucket(bucketURL string, fr multipart.File, fn string, fs int) error {
 	url := fmt.Sprintf("%s%s", bucketURL, fn)
 	req, err := http.NewRequest(http.MethodPut, url, fr)
 	req.ContentLength = int64(fs)
+	req.Header.Add("Cache-Control", "public, max-age=31536000, immutable")
 
 	if err != nil {
 		return fmt.Errorf("Error creating request")

@@ -24,7 +24,7 @@ func bgImg(bucketURL string, imgName string) templ.CSSClass {
 	}
 }
 
-func Gallery() templ.Component {
+func Gallery(viewComponent templ.Component) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
@@ -54,11 +54,27 @@ func Gallery() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex mb-2 w-full\"><button hx-get=\"/gallery\" hx-target=\"#gallery-view\"><img class=\"size-10 invert\" src=\"/assets/img/list.svg\"></button> <button hx-get=\"/gallery?v=grid\" hx-target=\"#gallery-view\"><img class=\"size-10 invert\" src=\"/assets/img/grid.svg\"></button> <button @click=\"$refs.uploadDialog.showModal()\"><img class=\"size-10 invert\" src=\"/assets/img/upload.svg\"></button></div><div id=\"gallery-view\" class=\"flex flex-col\"></div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"relative p-10\" x-data=\"{ modalOpen: false, openImgURL : &#39;&#39; }\"><div class=\"flex mb-2 w-full\"><button hx-get=\"/gallery?v=list\" hx-target=\"body\" hx-push-url=\"true\"><img class=\"size-10 invert\" src=\"/assets/img/list.svg\"></button> <button hx-get=\"/gallery?v=grid\" hx-target=\"body\" hx-push-url=\"true\"><img class=\"size-10 invert\" src=\"/assets/img/grid.svg\"></button> <button @click=\"$refs.uploadDialog.showModal()\"><img class=\"size-10 invert\" src=\"/assets/img/upload.svg\"></button></div><div id=\"gallery-view\" class=\"flex flex-col\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = viewComponent.Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			templ_7745c5c3_Err = UploadDialog().Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = PhotoViewerModal().Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -90,7 +106,7 @@ func GridView(o []BucketBodyView, bucketURL string) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"grid grid-cols-6 gap-2 w-full auto-rows-[20rem]\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"grid grid-cols-10 gap-2 w-full auto-rows-[20rem]\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -100,12 +116,16 @@ func GridView(o []BucketBodyView, bucketURL string) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a href=\"")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button @click=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var5 templ.SafeURL = templ.SafeURL(fmt.Sprintf("%s%s", bucketURL, x.Name))
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var5)))
+			var templ_7745c5c3_Var5 string
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("modalOpen = true; openImgURL = '%s%s'; document.body.classList.add('no-scroll');", bucketURL, x.Name))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/gallery/gallery.page.templ`, Line: 51, Col: 127}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -122,16 +142,12 @@ func GridView(o []BucketBodyView, bucketURL string) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"></a>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"></button>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = UploadDialog().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -174,7 +190,7 @@ func ListView(names []string, bucketURL string) templ.Component {
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(n)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/gallery/gallery.page.templ`, Line: 51, Col: 66}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/gallery/gallery.page.templ`, Line: 60, Col: 66}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
@@ -184,10 +200,6 @@ func ListView(names []string, bucketURL string) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		}
-		templ_7745c5c3_Err = UploadDialog().Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
 		}
 		return templ_7745c5c3_Err
 	})
@@ -211,7 +223,7 @@ func UploadDialog() templ.Component {
 			templ_7745c5c3_Var10 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<dialog id=\"uploadDialog\" x-ref=\"uploadDialog\" hx-swap-oob=\"outerHTML\" class=\"self-center place-self-center p-3 w-2/12 rounded backdrop:bg-black backdrop:bg-opacity-40 backdrop:backdrop-blur-[2px]\"><div class=\"flex justify-between items-center mb-3\"><h1 class=\"inline text-2xl font-medium\">Send Files</h1><button x-on:click=\"$refs.uploadDialog.close()\"><img class=\"size-6\" src=\"/assets/img/x.svg\"></button></div><div id=\"recipient\" x-data=\"{ dragOver: false }\" @drop.prevent=\"drop\" @dragover.prevent=\"dragOver = true\" @dragleave.prevent=\"dragOver = false\" class=\"flex flex-col justify-center p-3 mb-3 space-y-1 rounded border-2\"><p class=\"text-center\">Drop Here</p></div><form id=\"upload-form\" class=\"flex flex-col items-center space-y-3\" hx-encoding=\"multipart/form-data\" hx-put=\"/gallery\" hx-target=\"#uploadDialog\"><input name=\"files-input\" hidden id=\"files-input\" multiple type=\"file\" autocomplete=\"off\"> <button type=\"submit\" class=\"p-2 w-full font-bold text-white bg-green-400 rounded\">Upload</button> <progress class=\"w-full rounded\" id=\"progress\" value=\"0\" max=\"100\"></progress></form><script type=\"text/javascript\">\n\n\t\t\thtmx.on('#upload-form', 'htmx:xhr:progress', function(evt) {\n\t\t\t\thtmx.find('#progress').setAttribute('value', evt.detail.loaded/evt.detail.total * 100)\n\t\t\t});\n\n\t\t\tfunction drop(ev) {\n\t\t\t\tlet files = ev.dataTransfer.files;\n\t\t\t\tlet recipientArea = document.getElementById(\"recipient\");\n\n\t\t\t\trecipientArea.innerHTML = \"\";\n\n\t\t\t\tfor(const i of files){\n\t\t\t\t\tlet p = document.createElement(\"p\");\n\t\t\t\t\tp.innerHTML = i.name;\n\t\t\t\t\trecipientArea.appendChild(p);\n\t\t\t\t}\n\n\t\t\t\tdocument.getElementById(\"files-input\").files = files;\n\t\t\t}\n\n\t\t</script></dialog>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<dialog id=\"uploadDialog\" x-ref=\"uploadDialog\" class=\"self-center place-self-center p-3 w-2/12 rounded backdrop:bg-black backdrop:bg-opacity-40 backdrop:backdrop-blur-[2px]\"><div><div class=\"flex justify-between items-center mb-3\"><h1 class=\"inline text-2xl font-medium\">Send Files</h1><button x-on:click=\"$refs.uploadDialog.close()\"><img class=\"size-6\" src=\"/assets/img/x.svg\"></button></div><div id=\"recipient\" x-data=\"{ dragOver: false }\" @drop.prevent=\"drop\" @dragover.prevent=\"dragOver = true\" @dragleave.prevent=\"dragOver = false\" class=\"flex flex-col justify-center p-3 mb-3 space-y-1 rounded border-2\"><p class=\"text-center\">Drop Here</p></div><form id=\"upload-form\" class=\"flex flex-col items-center space-y-3\" hx-encoding=\"multipart/form-data\" hx-put=\"/gallery\" hx-target=\"#uploadDialog\"><input name=\"files-input\" hidden id=\"files-input\" multiple type=\"file\" autocomplete=\"off\"> <button type=\"submit\" class=\"p-2 w-full font-bold text-white bg-green-400 rounded\">Upload</button> <progress class=\"w-full rounded\" id=\"progress\" value=\"0\" max=\"100\"></progress></form></div><script type=\"text/javascript\" src=\"/assets/js/gallery.js\"></script></dialog>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -237,7 +249,7 @@ func SuccessDialog() templ.Component {
 			templ_7745c5c3_Var11 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex justify-between items-center mb-3\"><h1 class=\"inline text-2xl font-medium\">Send Files</h1><a href=\"/gallery\"><img class=\"size-6\" src=\"/assets/img/x.svg\"></a></div><div class=\"flex flex-col justify-center items-center space-y-2\"><img class=\"size-12\" src=\"/assets/img/success.svg\"><p class=\"text-xl font-medium text-center\">Upload Done</p><div class=\"flex space-x-2 w-full\"><button hx-get=\"/gallery?v=grid\" hx-target=\"#gallery-view\" x-on:click=\"$refs.uploadDialog.close()\" class=\"p-2 w-full font-bold text-center text-white bg-gray-400 rounded hover:bg-gray-600\">Go Grid</button></div></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex justify-between items-center mb-3\"><h1 class=\"inline text-2xl font-medium\">Send Files</h1><a href=\"/gallery\"><img class=\"size-6\" src=\"/assets/img/x.svg\"></a></div><div class=\"flex flex-col justify-center items-center space-y-2\"><img class=\"size-12\" src=\"/assets/img/success.svg\"><p class=\"text-xl font-medium text-center\">Upload Done</p><div class=\"flex space-x-2 w-full\"><button hx-get=\"/gallery?v=grid\" hx-target=\"body\" x-on:click=\"$refs.uploadDialog.close()\" class=\"p-2 w-full font-bold text-center text-white bg-gray-400 rounded hover:bg-gray-600\">Go Grid</button></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
