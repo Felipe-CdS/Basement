@@ -1,13 +1,12 @@
 package dashboard_view
 
 import (
-	"nugu.dev/basement/pkg/models"
 	layouts_view "nugu.dev/basement/views/layouts"
 	"strconv"
 	"time"
 )
 
-templ Dashboard(list []models.DayStats) {
+templ Dashboard() {
 	@layouts_view.Base() {
 		<form
 			autocomplete="off"
@@ -94,6 +93,5 @@ templ Dashboard(list []models.DayStats) {
 			<span id="error-span"></span>
 		</form>
 		<hr class="my-8 mx-auto w-full h-px bg-gray-200 border-0 align-center"/>
-		@StatsTable(list)
 	}
 }

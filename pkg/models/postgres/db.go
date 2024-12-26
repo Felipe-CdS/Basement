@@ -11,12 +11,13 @@ import (
 )
 
 type Store struct {
-	Db *sql.DB
+	Db      *sql.DB
+	Testing bool
 }
 
-func NewPostgresDB() *sql.DB {
+func NewPostgresDB(t bool) *sql.DB {
 
-	dbStore := Store{}
+	dbStore := Store{Testing: t}
 
 	if err := dbStore.getConnection(); err != nil {
 		log.Fatalf("failed to connect to the database... Error: %s", err)
@@ -40,6 +41,11 @@ func (dbStore *Store) getConnection() error {
 	user := "postgres"
 	password := "postgres"
 	dbname := "basement"
+
+	if dbStore.Testing {
+		log.Println("Connecting to tests database...")
+		dbname = "basement_tests"
+	}
 
 	if os.Getenv("APP_ENV") == "TESTING" {
 		port = 8001
@@ -69,12 +75,39 @@ func (dbStore *Store) getConnection() error {
 
 func createMigrations(db *sql.DB) error {
 
-	statement := `CREATE TABLE IF NOT EXISTS activities (
-		id INTEGER PRIMARY KEY
-		, activity_type VARCHAR
-		, start_time TIMESTAMP WITH TIME ZONE NOT NULL
+	// CREATE DATABASE basement TEMPLATE template0;
+	// SET timezone TO 'UTC';
+
+	statement := `
+	CREATE TABLE IF NOT EXISTS tags (
+		"id" SERIAL PRIMARY KEY
+		, "type" VARCHAR (50) NOT NULL
+		, "name" VARCHAR (50) NOT NULL UNIQUE
+	);
+
+	CREATE TABLE IF NOT EXISTS activities (
+		"id" SMALLSERIAL PRIMARY KEY
+		, start_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 		, end_time TIMESTAMP WITH TIME ZONE
-	)`
+		, description TEXT
+	);
+
+	CREATE TABLE IF NOT EXISTS activities_tags (
+		fk_activity_id INTEGER NOT NULL
+		, fk_tag_id INTEGER NOT NULL
+
+		, PRIMARY KEY(fk_activity_id, fk_tag_id)
+		, CONSTRAINT fk_tag
+			FOREIGN KEY(fk_tag_id)
+			REFERENCES tags("id")
+			ON UPDATE CASCADE
+			ON DELETE CASCADE
+		, CONSTRAINT fk_activity
+			FOREIGN KEY(fk_activity_id)
+			REFERENCES activities("id")
+			ON UPDATE CASCADE
+			ON DELETE CASCADE
+	);`
 
 	_, err := db.Exec(statement)
 
@@ -82,23 +115,25 @@ func createMigrations(db *sql.DB) error {
 		return fmt.Errorf("failed to create statement 1... Error: %s", err)
 	}
 
-	statement = `CREATE TABLE IF NOT EXISTS day_stats (
-		id SERIAL PRIMARY KEY
-		, date			DATE NOT NULL UNIQUE
-		, study			INTEGER NOT NULL DEFAULT 0
-		, programming_work	INTEGER NOT NULL DEFAULT 0
-		, programming_hobby	INTEGER NOT NULL DEFAULT 0
-		, read_study		INTEGER NOT NULL DEFAULT 0
-		, read_fun		INTEGER NOT NULL DEFAULT 0
-		, korean		INTEGER NOT NULL DEFAULT 0
-		, garbage		INTEGER NOT NULL DEFAULT 0
-	)`
+	return nil
+}
 
-	_, err = db.Exec(statement)
+func DropTestMigrations(db *sql.DB) error {
+
+	statement := `
+		DROP TABLE activities_tags;
+		DROP TABLE activities;
+		DROP TABLE tags;
+	`
+
+	_, err := db.Exec(statement)
 
 	if err != nil {
-		return fmt.Errorf("failed to create statement 2... Error: %s", err)
+
+		log.Println("Error droping Migrations", err)
+		return fmt.Errorf("failed to create statement 1... Error: %s", err)
 	}
 
+	log.Println("Dropped Migrations")
 	return nil
 }

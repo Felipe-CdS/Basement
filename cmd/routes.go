@@ -8,9 +8,15 @@ func (a *application) routes() *http.ServeMux {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", a.Landing)
-	mux.HandleFunc("/dashboard", a.Dashboard)
 
-	mux.HandleFunc("/stat", a.AddStatTime)
+	mux.HandleFunc("/activities", func(w http.ResponseWriter, r *http.Request) {
+
+		if err := a.AuthMiddleware(w, r); err != nil {
+			return
+		}
+
+		a.Activities(w, r)
+	})
 
 	mux.HandleFunc("/gallery", func(w http.ResponseWriter, r *http.Request) {
 

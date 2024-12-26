@@ -5,37 +5,28 @@ import (
 	"time"
 )
 
-var ErrNoRecord = errors.New("models: no matching record found")
+var ErrNotFound = errors.New("models: no matching record found")
+var ErrDbOperation = errors.New("models: database operation failed")
 var ErrActityTypeNotFound = errors.New("models: activity type doesnt exist")
+var ErrNotFinished = errors.New("models: there is one or more activities not finished yet")
 var ErrAlreadyExists = errors.New("models: entry already exists")
 
-type ActivityEnum string
+type TagEnum string
 
 const (
-	Study            ActivityEnum = "study"
-	ProgrammingWork  ActivityEnum = "programming_work"
-	ProgrammingHobby ActivityEnum = "programming_hobby"
-	ReadStudy        ActivityEnum = "read_study"
-	Garbage          ActivityEnum = "garbage"
-	ReadFun          ActivityEnum = "read_fun"
-	Korean           ActivityEnum = "korean"
+	ActivityTag TagEnum = "activity"
+	IdolTag     TagEnum = "idol"
 )
 
 type Activity struct {
-	ID           int
-	activityType ActivityEnum
-	StartTime    time.Time
-	EndTime      time.Time
+	ID          int
+	StartTime   time.Time
+	EndTime     time.Time
+	Description string
 }
 
-type DayStats struct {
-	ID               int
-	Date             time.Time
-	Study            int
-	ProgrammingWork  int
-	ProgrammingHobby int
-	ReadStudy        int
-	Garbage          int
-	ReadFun          int
-	Korean           int
+type Tag struct {
+	ID   int
+	Type TagEnum
+	Name string
 }

@@ -12,25 +12,23 @@ import (
 )
 
 type application struct {
-	AuthToken     string
-	ReadBucketURL string
-	RWBucketURL   string
-	activities    *postgres.ActivityModel
-	dayStats      *postgres.DayStatsModel
+	AuthToken            string
+	ReadBucketURL        string
+	RWBucketURL          string
+	activitiesRepository *postgres.ActivityRepository
 }
 
 func main() {
 
 	setEnvVars()
 
-	db := postgres.NewPostgresDB()
+	db := postgres.NewPostgresDB(false)
 
 	app := &application{
-		AuthToken:     "123",
-		ReadBucketURL: os.Getenv("PUBLIC_SINGLE_READ_BUCKET"),
-		RWBucketURL:   os.Getenv("PRIVATE_LIST_RW_BUCKET"),
-		activities:    &postgres.ActivityModel{Db: db},
-		dayStats:      &postgres.DayStatsModel{Db: db},
+		AuthToken:            "123",
+		ReadBucketURL:        os.Getenv("PUBLIC_SINGLE_READ_BUCKET"),
+		RWBucketURL:          os.Getenv("PRIVATE_LIST_RW_BUCKET"),
+		activitiesRepository: &postgres.ActivityRepository{Db: db},
 	}
 
 	srv := &http.Server{
@@ -44,7 +42,6 @@ func main() {
 }
 
 func setEnvVars() {
-
 	env := os.Getenv("ENV")
 	envPath, _ := os.Getwd()
 

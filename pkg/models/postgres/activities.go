@@ -7,61 +7,94 @@ import (
 	"nugu.dev/basement/pkg/models"
 )
 
-type ActivityModel struct {
+type ActivityRepository struct {
 	Db *sql.DB
 }
 
-func (a *ActivityModel) Insert(activityType models.ActivityEnum, startTime time.Time) (int, error) {
+func (a *ActivityRepository) StartActivity() (int, error) {
 
-	// TODO: IF LAST ONE IS NOT FINISHED RETURN ERROR
-	var prev, next int
+	var newId, notFinishedCheck int
 
-	stmt := `SELECT id FROM activities ORDER BY id DESC`
-	query := a.Db.QueryRow(stmt).Scan(&prev)
-
-	if query == sql.ErrNoRows {
-		prev = 0
+	stmt := "SELECT COUNT(*) FROM activities WHERE activities.end_time IS NULL;"
+	if err := a.Db.QueryRow(stmt).Scan(&notFinishedCheck); err != nil {
+		return 0, models.ErrDbOperation
+	}
+	if notFinishedCheck > 0 {
+		return 0, models.ErrNotFinished
 	}
 
-	stmt = `INSERT INTO activities (id, activity_type, start_time) VALUES ($1, $2, $3) RETURNING id`
-
-	err := a.Db.QueryRow(stmt, prev+1, activityType, startTime).Scan(&next)
-
-	if err != nil {
+	stmt = "INSERT INTO activities VALUES(DEFAULT) RETURNING activities.id;"
+	if err := a.Db.QueryRow(stmt).Scan(&newId); err != nil {
 		return 0, err
 	}
 
-	return next, nil
+	return newId, nil
 }
 
-func (a *ActivityModel) SetEnd(endTime time.Time) (int, models.ActivityEnum, error) {
+func (a *ActivityRepository) EndActivity() error {
 
-	// TODO: IF LAST ONE IS FINISHED RETURN ERROR
+	var endTime sql.NullTime
 
-	var id int
+	stmt := `SELECT end_time
+			FROM activities
+			WHERE id IN (SELECT MAX(id) FROM activities);`
 
-	stmt := `SELECT id FROM activities ORDER BY id DESC`
-	query := a.Db.QueryRow(stmt).Scan(&id)
-
-	if query == sql.ErrNoRows {
-		return 0, "", query
+	if err := a.Db.QueryRow(stmt).Scan(&endTime); err != nil {
+		return models.ErrNotFound
 	}
 
-	var startTime time.Time
-	var aType models.ActivityEnum
+	// If last Activity is already Finished return nil
+	if endTime.Valid {
+		return nil
+	}
 
-	stmt = `UPDATE activities SET end_time = $1 WHERE ID = $2 RETURNING start_time, activity_type`
+	stmt = `UPDATE activities 
+			SET end_time = NOW() 
+			WHERE id IN (SELECT MAX(id) FROM activities);`
 
-	err := a.Db.QueryRow(stmt, endTime, id).Scan(&startTime, &aType)
+	_, err := a.Db.Exec(stmt)
 
 	if err != nil {
-		return 0, "", query
+		return models.ErrDbOperation
 	}
 
-	return int(endTime.Sub(startTime).Seconds()), aType, nil
+	return nil
 }
 
-func (a *ActivityModel) GetByYear(year int) (int, error) {
+func (a *ActivityRepository) GetLastActivity() (models.Activity, error) {
 
-	return 0, nil
+	var search models.Activity
+	var endTime sql.NullTime
+	var description sql.NullString
+
+	stmt := `SELECT id, start_time, end_time, description
+			FROM activities
+			WHERE id IN (SELECT MAX(id) FROM activities);`
+
+	if err := a.Db.QueryRow(stmt).Scan(
+		&search.ID,
+		&search.StartTime,
+		&endTime,
+		&description,
+	); err != nil {
+		if err == sql.ErrNoRows {
+			return search, models.ErrNotFound
+		}
+
+		return search, models.ErrDbOperation
+	}
+
+	if endTime.Valid {
+		search.EndTime = endTime.Time
+	} else {
+		search.EndTime = time.Time{}
+	}
+
+	if description.Valid {
+		search.Description = description.String
+	} else {
+		search.Description = ""
+	}
+
+	return search, nil
 }
