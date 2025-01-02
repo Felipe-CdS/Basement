@@ -13,7 +13,7 @@ templ Base() {
 			<link rel="stylesheet" type="text/css" href="/assets/css/special-styles.css"/>
 			<link rel="preconnect" href="https://fonts.googleapis.com"/>
 			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-			<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet"/>
+			<link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet"/>
 			<script src="https://unpkg.com/htmx.org@2.0.2" integrity="sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ" crossorigin="anonymous"></script>
 			<meta name="htmx-config" content='{"allowNestedOobSwaps":"false"}'/>
 			<script src="https://unpkg.com/htmx-ext-response-targets@2.0.0/response-targets.js"></script>
@@ -23,7 +23,7 @@ templ Base() {
 				.no-scroll { position:fixed }
 			</style>
 		</head>
-		<body x-data hx-boost="true" hx-ext="response-targets" class="min-h-screen w-screen flex flex-col bg-[#0F0F0F] overflow-x-hidden text-white">
+		<body x-data hx-boost="true" hx-ext="response-targets" class="p-4 lg:p-10 font-base min-h-screen w-screen flex flex-col bg-[#0F0F0F] overflow-x-hidden text-white">
 			{ children... }
 		</body>
 	</html>

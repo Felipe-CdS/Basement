@@ -4,6 +4,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
+        base: ["Inconsolata", "ui-serif"],
         kr: ["Noto Serif KR", "ui-serif"],
       },
     },

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 )
 
 func (app *application) AuthMiddleware(w http.ResponseWriter, r *http.Request) error {
@@ -17,6 +18,18 @@ func (app *application) AuthMiddleware(w http.ResponseWriter, r *http.Request) e
 
 		redir := fmt.Sprintf("/login?redirect=%s", r.URL.Path)
 		http.Redirect(w, r, redir, http.StatusPermanentRedirect)
+		return fmt.Errorf(http.StatusText(http.StatusPermanentRedirect))
+	}
+
+	return nil
+}
+
+func (app *application) HtmxMiddleware(w http.ResponseWriter, r *http.Request) error {
+
+	htmxReq, err := strconv.ParseBool(r.Header.Get("HX-Request"))
+
+	if err != nil || !htmxReq {
+		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
 		return fmt.Errorf(http.StatusText(http.StatusPermanentRedirect))
 	}
 
