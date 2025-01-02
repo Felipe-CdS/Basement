@@ -23,6 +23,10 @@ type Activity struct {
 	StartTime   time.Time
 	EndTime     time.Time
 	Description string
+
+	// Age = EndTime - StartTime
+	// Special Property that the DB returns on some queries
+	Age []uint8
 }
 
 type Tag struct {

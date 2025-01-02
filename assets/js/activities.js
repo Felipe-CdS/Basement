@@ -5,18 +5,12 @@ function findCookie() {
     let row = cookies[i];
 
     if (row.startsWith("start=")) {
-      startTime = row.split("=")[1];
-      break;
+      return row.split("=")[1];
     }
   }
 }
 
 function calcTime() {
-  if (startTime == null) {
-    document.getElementById("counter-display").style.display = "none";
-    return;
-  }
-
   const diff = new Date() - new Date(startTime * 1e3);
 
   let hrs = Math.floor(diff / 3.6e6);
@@ -29,11 +23,29 @@ function calcTime() {
 
   const display = `${hrs}:${min}:${sec}`;
 
-  document.getElementById("counter-display").style.display = "initial";
+  if (isNaN(hrs)) {
+    display = `00:00:00`;
+  }
+
   document.getElementById("counter-display").innerHTML = display;
 }
 
+function startTimerInterval() {
+  startTime = findCookie();
+
+  if (startTime == null) {
+    document.getElementById("counter-display").innerHTML = "00:00:00";
+    clearInterval(intervalHolder);
+    return;
+  }
+
+  intervalHolder = window.setInterval(calcTime, 1000);
+}
+
 // Start when page loads
-var startTime = null;
-findCookie();
-var intervalCalc = window.setInterval(calcTime, 1000);
+var startTime = findCookie();
+var intervalHolder, blinkHolder;
+
+var display = document.getElementById("counter-display");
+
+startTimerInterval();

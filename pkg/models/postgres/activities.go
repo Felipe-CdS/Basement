@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"database/sql"
+	"log"
 	"time"
 
 	"nugu.dev/basement/pkg/models"
@@ -94,6 +95,49 @@ func (a *ActivityRepository) GetLastActivity() (models.Activity, error) {
 		search.Description = description.String
 	} else {
 		search.Description = ""
+	}
+
+	return search, nil
+}
+
+func (a *ActivityRepository) GetTodayActivities() ([]models.Activity, error) {
+
+	var search []models.Activity
+	var description sql.NullString
+
+	stmt := `SELECT id, start_time, end_time, description, AGE(activities.end_time, activities.start_time)
+			FROM activities
+			 WHERE activities.start_time::date = CURRENT_DATE
+			 AND activities.end_time IS NOT NULL
+			 ORDER BY activities.start_time DESC;`
+
+	rows, err := a.Db.Query(stmt)
+
+	if err != nil {
+		return search, models.ErrDbOperation
+	}
+
+	for rows.Next() {
+		var s models.Activity
+
+		if err = rows.Scan(
+			&s.ID,
+			&s.StartTime,
+			&s.EndTime, // Dont need to use sql.NullTime bc query checks IS NOT NULL
+			&description,
+			&s.Age,
+		); err != nil {
+			log.Println(err)
+			return search, models.ErrDbOperation
+		}
+
+		if description.Valid {
+			s.Description = description.String
+		} else {
+			s.Description = ""
+		}
+
+		search = append(search, s)
 	}
 
 	return search, nil

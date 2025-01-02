@@ -1,21 +1,43 @@
 package activity_views
 
-import layouts_view "nugu.dev/basement/views/layouts"
+import (
+	"fmt"
+	"nugu.dev/basement/pkg/models"
+	layouts_view "nugu.dev/basement/views/layouts"
+	"time"
+)
 
-templ ActivityIndex(runningActivity bool) {
+templ ActivityIndex(runningActivity bool, listDone []models.Activity) {
 	@layouts_view.Base() {
 		<div
-			class="relative p-10"
+			class="flex relative flex-col justify-center items-center p-10 space-y-5"
 		>
-			<div class="flex flex-col justify-center items-center mb-2 space-y-5 w-full">
-				<h1 id="counter-display" class="hidden text-7xl font-bold">00:00:00</h1>
+			<div
+				hx-on::after-swap="startTimerInterval()"
+				class="flex flex-col justify-center items-center mb-2 space-y-5 w-full"
+			>
+				<h1 id="counter-display" class="text-7xl font-bold">00:00:00</h1>
 				if !runningActivity {
 					@StartButton()
 				} else {
 					@StopButton()
 				}
 			</div>
-			<div id="activities-list-view" class="flex flex-col"></div>
+			<div id="activities-list-view" class="flex flex-col p-3 space-y-2 w-5/12 border">
+				for _, x := range listDone {
+					<div class="flex flex-col p-3 w-full border">
+						<span>
+							{ x.StartTime.Format(time.RFC1123) }
+						</span>
+						<span>
+							{ x.EndTime.Format(time.RFC1123) }
+						</span>
+						<span>
+							{ fmt.Sprint(string(x.Age)) }
+						</span>
+					</div>
+				}
+			</div>
 			<script type="text/javascript" src="/assets/js/activities.js"></script>
 		</div>
 	}
@@ -38,6 +60,7 @@ templ StopButton() {
 		id="controller"
 		hx-patch="/activities"
 		hx-swap="outerHTML"
+		hx-on::after-request="window.setInterval(calcTime, 1000);"
 		class="flex items-center p-2 rounded border"
 	>
 		<img class="mr-3 size-10 invert" src="/assets/img/player-stop.svg"/>
