@@ -38,7 +38,7 @@ func Login() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<dialog open class=\"self-center place-self-center p-3 rounded\"><form class=\"flex flex-col space-y-2\" hx-post=\"login\" hx-target=\"body\" hx-push-url=\"true\"><input class=\"text-black rounded border border-black\" name=\"p\" type=\"password\"> <button>Send</button></form></dialog>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<dialog open class=\"self-center place-self-center p-3 rounded\"><form class=\"flex flex-col space-y-2\" hx-post=\"login\" hx-target=\"body\" hx-push-url=\"true\"><input class=\"text-black rounded border border-black\" name=\"p\" type=\"password\"> <button>Send</button></form></dialog><script src=\"/assets/js/htmx-2.0.4.min.js\"></script> <script src=\"/assets/js/alpine-3.14.8.min.js\"></script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

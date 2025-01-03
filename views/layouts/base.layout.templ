@@ -4,24 +4,13 @@ templ Base() {
 	<!DOCTYPE html>
 	<html lang="en" data-theme="dark">
 		<head>
+			<title>Basement</title>
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-			<meta name="google" content="notranslate"/>
-			<title>Basement </title>
 			<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.ico"/>
-			<link rel="stylesheet" type="text/css" href="/assets/css/styles.css"/>
-			<link rel="stylesheet" type="text/css" href="/assets/css/special-styles.css"/>
-			<link rel="preconnect" href="https://fonts.googleapis.com"/>
-			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-			<link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet"/>
-			<script src="https://unpkg.com/htmx.org@2.0.2" integrity="sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ" crossorigin="anonymous"></script>
+			<link rel="stylesheet" type="text/css" href="/assets/css/homemade_styles.css"/>
+			<link rel="stylesheet" type="text/css" href="/assets/css/tailwind_styles.css"/>
 			<meta name="htmx-config" content='{"allowNestedOobSwaps":"false"}'/>
-			<script src="https://unpkg.com/htmx-ext-response-targets@2.0.0/response-targets.js"></script>
-			<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-			<script src="https://cdn.tailwindcss.com"></script>
-			<style type="text/tailwindcss">
-				.no-scroll { position:fixed }
-			</style>
 		</head>
 		<body x-data hx-boost="true" hx-ext="response-targets" class="p-4 lg:p-10 font-base min-h-screen w-screen flex flex-col bg-[#0F0F0F] overflow-x-hidden text-white">
 			{ children... }

@@ -6,6 +6,9 @@
 	.heading-primary {
 		@apply text-xl font-semibold;
 	}
+	.no-scroll {
+		@apply fixed;
+	}
 	li {
 		@apply list-disc;
 	}

@@ -5,7 +5,6 @@ import (
 	"strings"
 	"time"
 
-	landing_view "nugu.dev/basement/views/landing"
 	layouts_view "nugu.dev/basement/views/layouts"
 )
 
@@ -44,7 +43,7 @@ func (app *application) Landing(w http.ResponseWriter, r *http.Request) {
 	// 	log.Fatalln(err)
 	// }
 
-	component := landing_view.LandingPageView()
+	component := layouts_view.StaticHome()
 	component.Render(r.Context(), w)
 }
 

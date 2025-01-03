@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	landing_view "nugu.dev/basement/views/landing"
+	"nugu.dev/basement/views/static_views"
 )
 
 func (a *application) routes() *http.ServeMux {
@@ -47,22 +47,12 @@ func (a *application) routes() *http.ServeMux {
 	})
 
 	mux.HandleFunc("/reads", func(w http.ResponseWriter, r *http.Request) {
-
-		if err := a.HtmxMiddleware(w, r); err != nil {
-			return
-		}
-
-		component := landing_view.Reads()
+		component := static_views.Reads()
 		component.Render(r.Context(), w)
 	})
 
 	mux.HandleFunc("/bookmarks", func(w http.ResponseWriter, r *http.Request) {
-
-		if err := a.HtmxMiddleware(w, r); err != nil {
-			return
-		}
-
-		component := landing_view.Bookmarks()
+		component := static_views.Bookmarks()
 		component.Render(r.Context(), w)
 	})
 

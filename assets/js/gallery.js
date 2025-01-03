@@ -27,3 +27,5 @@ function drop(ev) {
 
   document.getElementById("files-input").files = files;
 }
+
+htmx.config.allowNestedOobSwaps = false;
