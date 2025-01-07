@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 
+	"nugu.dev/basement/views/activity_views"
 	"nugu.dev/basement/views/static_views"
 )
 
@@ -48,6 +49,11 @@ func (a *application) routes() *http.ServeMux {
 
 	mux.HandleFunc("/reads", func(w http.ResponseWriter, r *http.Request) {
 		component := static_views.Reads()
+		component.Render(r.Context(), w)
+	})
+
+	mux.HandleFunc("/log", func(w http.ResponseWriter, r *http.Request) {
+		component := activity_views.Log()
 		component.Render(r.Context(), w)
 	})
 
