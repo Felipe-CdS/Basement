@@ -31,7 +31,7 @@ func (app *application) Activities(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	listDone, queryErr := app.activitiesRepository.GetTodayActivities()
+	listDone, queryErr := app.activitiesRepository.GetDailyLog(time.Now())
 
 	if queryErr != nil && queryErr != models.ErrNotFound {
 		http.Error(w, queryErr.Error(), http.StatusInternalServerError)
@@ -100,6 +100,26 @@ func (app *application) finishActivity(w http.ResponseWriter, r *http.Request) {
 	setCookie(w, last.StartTime, last.EndTime)
 
 	component := activity_views.StartButton()
+	component.Render(r.Context(), w)
+}
+
+func (app *application) GetDailyLog(w http.ResponseWriter, r *http.Request) {
+
+	dateReq, err := time.Parse(time.DateOnly, r.PathValue("date"))
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	log, err := app.activitiesRepository.GetDailyLog(dateReq)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	component := activity_views.DetailedLog(log)
 	component.Render(r.Context(), w)
 }
 

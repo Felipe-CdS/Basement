@@ -1,6 +1,10 @@
 package activity_views
 
-import layouts_view "nugu.dev/basement/views/layouts"
+import (
+	"fmt"
+	layouts_view "nugu.dev/basement/views/layouts"
+	"time"
+)
 
 templ Log() {
 	@layouts_view.StaticHome() {
@@ -45,10 +49,13 @@ templ Log() {
 				style="grid-template-columns: repeat(53, 1fr);
 				grid-template-rows: repeat(7, 0.75rem);"
 			>
-				for i := 0; i < 366; i++ {
-					<div
+				for i := 0; i < 365; i++ {
+					<button
+						hx-get={ fmt.Sprintf("log/%s", calcDate(2025, i)) }
+						hx-target="#detailed-log-section"
+						hx-swap="innerHTML"
 						class="bg-gray-800 rounded-sm first:row-span-4 first:self-end hover:border hover:border-red-500 size-3"
-					></div>
+					></button>
 				}
 			</div>
 		</div>
@@ -67,8 +74,19 @@ templ Log() {
 		<h2 class="heading-primary">
 			/ Day Stats
 		</h2>
-		<p>
-			Select a day on the heatmap for more info...
-		</p>
+		<div id="detailed-log-section">
+			<p>Select a day on the heatmap for more info...</p>
+		</div>
+		<script src="/assets/js/htmx-2.0.4.min.js"></script>
+		<script src="/assets/js/alpine-3.14.8.min.js"></script>
 	}
+}
+
+func calcDate(selectedYear int, i int) string {
+
+	r := time.Date(selectedYear, 1, 1, 0, 0, 0, 0, time.UTC)
+	dur := time.Duration(i) * time.Duration(24) * time.Hour
+	r = r.Add(dur)
+
+	return r.Format(time.DateOnly)
 }

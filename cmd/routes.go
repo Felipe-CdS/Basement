@@ -57,6 +57,10 @@ func (a *application) routes() *http.ServeMux {
 		component.Render(r.Context(), w)
 	})
 
+	mux.HandleFunc("/log/{date}", func(w http.ResponseWriter, r *http.Request) {
+		a.GetDailyLog(w, r)
+	})
+
 	mux.HandleFunc("/bookmarks", func(w http.ResponseWriter, r *http.Request) {
 		component := static_views.Bookmarks()
 		component.Render(r.Context(), w)

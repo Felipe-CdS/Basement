@@ -8,7 +8,11 @@ package activity_views
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import layouts_view "nugu.dev/basement/views/layouts"
+import (
+	"fmt"
+	layouts_view "nugu.dev/basement/views/layouts"
+	"time"
+)
 
 func Log() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -44,13 +48,26 @@ func Log() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			for i := 0; i < 366; i++ {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"bg-gray-800 rounded-sm first:row-span-4 first:self-end hover:border hover:border-red-500 size-3\"></div>")
+			for i := 0; i < 365; i++ {
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button hx-get=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var3 string
+				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("log/%s", calcDate(2025, i)))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/log.page.templ`, Line: 54, Col: 55}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#detailed-log-section\" hx-swap=\"innerHTML\" class=\"bg-gray-800 rounded-sm first:row-span-4 first:self-end hover:border hover:border-red-500 size-3\"></button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div><div class=\"grid grid-cols-3 w-full\"><span class=\"text-center\">Daily Average: 0 hours</span> <span class=\"text-center\">Current Streak: 0 days</span> <span class=\"text-center\">Longest Streak: 0 days</span></div><hr class=\"my-5 w-full\"><h2 class=\"heading-primary\">/ Day Stats</h2><p>Select a day on the heatmap for more info...</p>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div><div class=\"grid grid-cols-3 w-full\"><span class=\"text-center\">Daily Average: 0 hours</span> <span class=\"text-center\">Current Streak: 0 days</span> <span class=\"text-center\">Longest Streak: 0 days</span></div><hr class=\"my-5 w-full\"><h2 class=\"heading-primary\">/ Day Stats</h2><div id=\"detailed-log-section\"><p>Select a day on the heatmap for more info...</p></div><script src=\"/assets/js/htmx-2.0.4.min.js\"></script> <script src=\"/assets/js/alpine-3.14.8.min.js\"></script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -62,4 +79,13 @@ func Log() templ.Component {
 		}
 		return templ_7745c5c3_Err
 	})
+}
+
+func calcDate(selectedYear int, i int) string {
+
+	r := time.Date(selectedYear, 1, 1, 0, 0, 0, 0, time.UTC)
+	dur := time.Duration(i) * time.Duration(24) * time.Hour
+	r = r.Add(dur)
+
+	return r.Format(time.DateOnly)
 }

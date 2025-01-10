@@ -100,18 +100,18 @@ func (a *ActivityRepository) GetLastActivity() (models.Activity, error) {
 	return search, nil
 }
 
-func (a *ActivityRepository) GetTodayActivities() ([]models.Activity, error) {
+func (a *ActivityRepository) GetDailyLog(date time.Time) ([]models.Activity, error) {
 
 	var search []models.Activity
 	var description sql.NullString
 
 	stmt := `SELECT id, start_time, end_time, description, AGE(activities.end_time, activities.start_time)
 			FROM activities
-			 WHERE activities.start_time::date = CURRENT_DATE
+			 WHERE activities.start_time::date = $1
 			 AND activities.end_time IS NOT NULL
 			 ORDER BY activities.start_time DESC;`
 
-	rows, err := a.Db.Query(stmt)
+	rows, err := a.Db.Query(stmt, date.Format(time.DateOnly))
 
 	if err != nil {
 		return search, models.ErrDbOperation

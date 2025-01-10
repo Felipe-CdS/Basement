@@ -1,0 +1,13 @@
+package activity_views
+
+import "nugu.dev/basement/pkg/models"
+
+templ DetailedLog(log []models.Activity) {
+	if len(log) == 0 {
+		<p>No info for this day...</p>
+	} else {
+		for _, l := range log {
+			<div>{ l.Description }</div>
+		}
+	}
+}
