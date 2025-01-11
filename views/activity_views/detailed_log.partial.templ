@@ -1,8 +1,23 @@
 package activity_views
 
-import "nugu.dev/basement/pkg/models"
+import (
+	"nugu.dev/basement/pkg/models"
+	"strings"
+	"time"
+)
 
-templ DetailedLog(log []models.Activity) {
+templ DetailedLog(d time.Time, log []models.Activity) {
+	<div class="flex justify-between items-center">
+		<h2 class="heading-primary">
+			/ Day Stats - { formatDate(d) }
+		</h2>
+		<button
+			@click="$refs.editDialog.showModal()"
+			class="py-0.5 px-2 border border-white"
+		>
+			Edit Day 
+		</button>
+	</div>
 	if len(log) == 0 {
 		<p>No info for this day...</p>
 	} else {
@@ -10,4 +25,9 @@ templ DetailedLog(log []models.Activity) {
 			<div>{ l.Description }</div>
 		}
 	}
+}
+
+func formatDate(d time.Time) string {
+	holder := d.Format(time.RFC1123)
+	return strings.TrimSuffix(holder, " 00:00:00 UTC")
 }

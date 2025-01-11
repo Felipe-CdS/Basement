@@ -71,11 +71,14 @@ templ Log() {
 			</span>
 		</div>
 		<hr class="my-5 w-full"/>
-		<h2 class="heading-primary">
-			/ Day Stats
-		</h2>
-		<div id="detailed-log-section">
-			<p>Select a day on the heatmap for more info...</p>
+		<div x-data="{ modalOpen: false }">
+			<div id="detailed-log-section">
+				<h2 class="heading-primary">/ Day Stats</h2>
+				<div>
+					<p>Select a day on the heatmap for more info...</p>
+				</div>
+			</div>
+			@EditDailyLogModal()
 		</div>
 		<script src="/assets/js/htmx-2.0.4.min.js"></script>
 		<script src="/assets/js/alpine-3.14.8.min.js"></script>

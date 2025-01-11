@@ -119,7 +119,7 @@ func (app *application) GetDailyLog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	component := activity_views.DetailedLog(log)
+	component := activity_views.DetailedLog(dateReq, log)
 	component.Render(r.Context(), w)
 }
 

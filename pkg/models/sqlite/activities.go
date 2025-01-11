@@ -12,16 +12,13 @@ type ActivityModel struct {
 }
 
 func (a *ActivityModel) Insert(activityType models.ActivityEnum, startTime time.Time) (int, error) {
-
 	return 0, nil
 }
 
 func (a *ActivityModel) SetEnd(endTime time.Time) (int, error) {
-
 	return 0, nil
 }
 
 func (a *ActivityModel) GetByYear(year int) (int, error) {
-
 	return 0, nil
 }

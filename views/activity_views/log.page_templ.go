@@ -67,7 +67,15 @@ func Log() templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div><div class=\"grid grid-cols-3 w-full\"><span class=\"text-center\">Daily Average: 0 hours</span> <span class=\"text-center\">Current Streak: 0 days</span> <span class=\"text-center\">Longest Streak: 0 days</span></div><hr class=\"my-5 w-full\"><h2 class=\"heading-primary\">/ Day Stats</h2><div id=\"detailed-log-section\"><p>Select a day on the heatmap for more info...</p></div><script src=\"/assets/js/htmx-2.0.4.min.js\"></script> <script src=\"/assets/js/alpine-3.14.8.min.js\"></script>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div><div class=\"grid grid-cols-3 w-full\"><span class=\"text-center\">Daily Average: 0 hours</span> <span class=\"text-center\">Current Streak: 0 days</span> <span class=\"text-center\">Longest Streak: 0 days</span></div><hr class=\"my-5 w-full\"><div x-data=\"{ modalOpen: false }\"><div id=\"detailed-log-section\"><h2 class=\"heading-primary\">/ Day Stats</h2><div><p>Select a day on the heatmap for more info...</p></div></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = EditDailyLogModal().Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><script src=\"/assets/js/htmx-2.0.4.min.js\"></script> <script src=\"/assets/js/alpine-3.14.8.min.js\"></script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

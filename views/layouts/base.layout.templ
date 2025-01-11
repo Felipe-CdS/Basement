@@ -12,7 +12,12 @@ templ Base() {
 			<link rel="stylesheet" type="text/css" href="/assets/css/tailwind_styles.css"/>
 			<meta name="htmx-config" content='{"allowNestedOobSwaps":"false"}'/>
 		</head>
-		<body x-data hx-boost="true" hx-ext="response-targets" class="p-4 lg:p-10 font-base min-h-screen w-screen flex flex-col bg-[#0F0F0F] overflow-x-hidden text-white">
+		<body
+			x-data
+			hx-boost="true"
+			hx-ext="response-targets"
+			class="p-4 lg:px-8 lg:py-10 font-base min-h-screen w-screen flex flex-col bg-[#0F0F0F] overflow-x-hidden text-white"
+		>
 			{ children... }
 		</body>
 	</html>
