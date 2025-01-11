@@ -14,8 +14,8 @@ templ Log() {
 		<p class="text-center">
 			At least sometimes I need to do something...
 		</p>
-		<div class="grid grid-cols-4 mt-3 w-full border border-gray-100">
-			<p class="col-span-4 p-0.5 text-center text-black bg-gray-100">
+		<div class="grid grid-cols-5 mt-3 w-full border border-gray-100">
+			<p class="col-span-5 p-0.5 text-center text-black bg-gray-100">
 				Category
 			</p>
 			<button class="p-0.5 hover:underline">
@@ -29,6 +29,9 @@ templ Log() {
 			</button>
 			<button class="p-0.5 hover:underline">
 				Studying
+			</button>
+			<button class="p-0.5 hover:underline">
+				Other Tags
 			</button>
 		</div>
 		<div class="flex pb-2 mt-5">
@@ -53,7 +56,7 @@ templ Log() {
 					<button
 						hx-get={ fmt.Sprintf("log/%s", calcDate(2025, i)) }
 						hx-target="#detailed-log-section"
-						hx-swap="innerHTML"
+						hx-swap="outerHTML"
 						class="bg-gray-800 rounded-sm first:row-span-4 first:self-end hover:border hover:border-red-500 size-3"
 					></button>
 				}
@@ -78,7 +81,6 @@ templ Log() {
 					<p>Select a day on the heatmap for more info...</p>
 				</div>
 			</div>
-			@EditDailyLogModal()
 		</div>
 		<script src="/assets/js/htmx-2.0.4.min.js"></script>
 		<script src="/assets/js/alpine-3.14.8.min.js"></script>

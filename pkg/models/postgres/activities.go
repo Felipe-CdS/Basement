@@ -66,9 +66,9 @@ func (a *ActivityRepository) GetLastActivity() (models.Activity, error) {
 
 	var search models.Activity
 	var endTime sql.NullTime
-	var description sql.NullString
+	var title, description sql.NullString
 
-	stmt := `SELECT id, start_time, end_time, description
+	stmt := `SELECT id, start_time, end_time, title, description
 			FROM activities
 			WHERE id IN (SELECT MAX(id) FROM activities);`
 
@@ -76,6 +76,7 @@ func (a *ActivityRepository) GetLastActivity() (models.Activity, error) {
 		&search.ID,
 		&search.StartTime,
 		&endTime,
+		&title,
 		&description,
 	); err != nil {
 		if err == sql.ErrNoRows {
@@ -97,15 +98,21 @@ func (a *ActivityRepository) GetLastActivity() (models.Activity, error) {
 		search.Description = ""
 	}
 
+	if title.Valid {
+		search.Title = title.String
+	} else {
+		search.Title = ""
+	}
+
 	return search, nil
 }
 
 func (a *ActivityRepository) GetDailyLog(date time.Time) ([]models.Activity, error) {
 
 	var search []models.Activity
-	var description sql.NullString
+	var title, description sql.NullString
 
-	stmt := `SELECT id, start_time, end_time, description, AGE(activities.end_time, activities.start_time)
+	stmt := `SELECT id, start_time, end_time, title, description, AGE(activities.end_time, activities.start_time)
 			FROM activities
 			 WHERE activities.start_time::date = $1
 			 AND activities.end_time IS NOT NULL
@@ -124,11 +131,18 @@ func (a *ActivityRepository) GetDailyLog(date time.Time) ([]models.Activity, err
 			&s.ID,
 			&s.StartTime,
 			&s.EndTime, // Dont need to use sql.NullTime bc query checks IS NOT NULL
+			&title,
 			&description,
 			&s.Age,
 		); err != nil {
 			log.Println(err)
 			return search, models.ErrDbOperation
+		}
+
+		if title.Valid {
+			s.Title = title.String
+		} else {
+			s.Title = ""
 		}
 
 		if description.Valid {

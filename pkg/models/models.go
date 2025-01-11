@@ -22,6 +22,7 @@ type Activity struct {
 	ID          int
 	StartTime   time.Time
 	EndTime     time.Time
+	Title       string
 	Description string
 
 	// Age = EndTime - StartTime

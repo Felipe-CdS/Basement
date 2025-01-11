@@ -89,6 +89,7 @@ func createMigrations(db *sql.DB) error {
 		"id" SMALLSERIAL PRIMARY KEY
 		, start_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 		, end_time TIMESTAMP WITH TIME ZONE
+		, title TEXT
 		, description TEXT
 	);
 

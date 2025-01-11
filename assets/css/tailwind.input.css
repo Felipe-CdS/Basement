@@ -4,7 +4,7 @@
 
 @layer components {
 	.heading-primary {
-		@apply text-xl font-semibold;
+		@apply text-2xl font-semibold;
 	}
 	.no-scroll {
 		@apply fixed;

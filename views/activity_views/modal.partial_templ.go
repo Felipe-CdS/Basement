@@ -8,7 +8,9 @@ package activity_views
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func EditDailyLogModal() templ.Component {
+import "time"
+
+func EditDailyLogModal(d time.Time) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
@@ -26,7 +28,20 @@ func EditDailyLogModal() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<dialog class=\"flex absolute top-0 left-0 z-10 w-full h-screen bg-black bg-opacity-90 backdrop-blur-sm\" id=\"editDialog\" x-ref=\"editDialog\" x-show=\"modalOpen\" x-on:keyup.escape=\"modalOpen = false; document.body.classList.remove(&#39;no-scroll&#39;);\"><div class=\"flex relative justify-center items-center p-10 w-full h-full\">aksdjsajkdkj</div></dialog>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<dialog id=\"editDialog\" x-ref=\"editDialog\" class=\"self-center place-self-center py-5 px-6 w-4/12 rounded backdrop:bg-black backdrop:bg-opacity-40 backdrop:backdrop-blur-[2px]\" x-on:keyup.escape=\"modalOpen = false; document.body.classList.remove(&#39;no-scroll&#39;);\"><div class=\"flex justify-between items-center mb-3 space-x-9\"><h1 class=\"inline text-xl font-semibold\">New entry (")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var2 string
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(formatDate(d, time.RFC1123))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/modal.partial.templ`, Line: 14, Col: 44}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(")</h1><button x-on:click=\"$refs.editDialog.close()\"><img class=\"size-6\" src=\"/assets/img/x.svg\"></button></div><form id=\"log-form\" class=\"flex flex-col items-center\"><div class=\"grid grid-cols-2 w-full\"><label for=\"start\">Start:</label> <input class=\"justify-self-end w-fit\" type=\"time\" id=\"start-input\" name=\"start\" required> <label for=\"start\">End:</label> <input class=\"justify-self-end w-fit\" type=\"time\" id=\"start-input\" name=\"end\" required> <label for=\"start\">Title:</label> <input type=\"text\" id=\"title-input\" name=\"title\" placeholder=\"Placeholder...\" class=\"col-span-2 px-2 mb-1 w-full border border-black\"> <label for=\"description\">Description:</label> <textarea id=\"description-input\" name=\"description\" rows=\"8\" placeholder=\"Placeholder...\" class=\"col-span-2 px-2 w-full border border-black\"></textarea></div></form><form id=\"tags-form\" class=\"flex flex-col items-center mt-1\"><div class=\"grid grid-cols-2 mb-3 w-full\"><label for=\"tags\">Tags:</label> <input type=\"text\" id=\"tags-input\" name=\"tags\" placeholder=\"Placeholder...\" class=\"col-span-2 px-2 w-full border border-black\"></div></form><div class=\"flex flex-wrap gap-y-3 space-x-3 w-full\"><span class=\"p-2 max-w-sm border truncate\">asdkjkjsd </span> <span class=\"p-2 max-w-sm border truncate\">aaaa </span> <span class=\"p-2 max-w-sm border truncate\">aaaaaaaaaaaaaaaaa </span> <span class=\"p-2 max-w-sm border truncate\">asdkjkjsd </span> <span class=\"p-2 max-w-sm border truncate\">aaaa </span> <span class=\"p-2 max-w-sm border truncate\">asdkjkjsd </span> <span class=\"p-2 max-w-sm border truncate\">aaaa </span> <span class=\"p-2 max-w-sm border truncate\">aaaaaaaaaaaaaaaaa </span> <span class=\"p-2 max-w-sm border truncate\">aaaaaaaaaaaaaaaaa </span></div><button form=\"log-form\" type=\"submit\" class=\"p-2 mt-3 w-full font-bold rounded border border-black hover:text-white hover:bg-black hover:bg-opacity-90\">Save</button></dialog>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

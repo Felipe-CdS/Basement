@@ -44,7 +44,7 @@ func Log() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h1 class=\"text-3xl font-semibold text-center\">/ Habits Log / </h1><p class=\"text-center\">At least sometimes I need to do something...</p><div class=\"grid grid-cols-4 mt-3 w-full border border-gray-100\"><p class=\"col-span-4 p-0.5 text-center text-black bg-gray-100\">Category</p><button class=\"p-0.5 hover:underline\">Overall</button> <button class=\"p-0.5 hover:underline\">Reading</button> <button class=\"p-0.5 hover:underline\">Programming</button> <button class=\"p-0.5 hover:underline\">Studying</button></div><div class=\"flex pb-2 mt-5\"><div class=\"grid grid-cols-1 gap-1 mr-2\" style=\"grid-template-rows: repeat(7, 0.75rem);\"><span class=\"text-sm leading-[.9rem]\">S</span> <span class=\"text-sm leading-[.9rem]\">M</span> <span class=\"text-sm leading-[.9rem]\">T</span> <span class=\"text-sm leading-[.9rem]\">W</span> <span class=\"text-sm leading-[.9rem]\">T</span> <span class=\"text-sm leading-[.9rem]\">F</span> <span class=\"text-sm leading-[.9rem]\">S</span></div><div class=\"grid overflow-y-scroll grid-flow-col gap-1 select-none\" style=\"grid-template-columns: repeat(53, 1fr);\n\t\t\t\tgrid-template-rows: repeat(7, 0.75rem);\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h1 class=\"text-3xl font-semibold text-center\">/ Habits Log / </h1><p class=\"text-center\">At least sometimes I need to do something...</p><div class=\"grid grid-cols-5 mt-3 w-full border border-gray-100\"><p class=\"col-span-5 p-0.5 text-center text-black bg-gray-100\">Category</p><button class=\"p-0.5 hover:underline\">Overall</button> <button class=\"p-0.5 hover:underline\">Reading</button> <button class=\"p-0.5 hover:underline\">Programming</button> <button class=\"p-0.5 hover:underline\">Studying</button> <button class=\"p-0.5 hover:underline\">Other Tags</button></div><div class=\"flex pb-2 mt-5\"><div class=\"grid grid-cols-1 gap-1 mr-2\" style=\"grid-template-rows: repeat(7, 0.75rem);\"><span class=\"text-sm leading-[.9rem]\">S</span> <span class=\"text-sm leading-[.9rem]\">M</span> <span class=\"text-sm leading-[.9rem]\">T</span> <span class=\"text-sm leading-[.9rem]\">W</span> <span class=\"text-sm leading-[.9rem]\">T</span> <span class=\"text-sm leading-[.9rem]\">F</span> <span class=\"text-sm leading-[.9rem]\">S</span></div><div class=\"grid overflow-y-scroll grid-flow-col gap-1 select-none\" style=\"grid-template-columns: repeat(53, 1fr);\n\t\t\t\tgrid-template-rows: repeat(7, 0.75rem);\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -56,26 +56,18 @@ func Log() templ.Component {
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("log/%s", calcDate(2025, i)))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/log.page.templ`, Line: 54, Col: 55}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/log.page.templ`, Line: 57, Col: 55}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#detailed-log-section\" hx-swap=\"innerHTML\" class=\"bg-gray-800 rounded-sm first:row-span-4 first:self-end hover:border hover:border-red-500 size-3\"></button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#detailed-log-section\" hx-swap=\"outerHTML\" class=\"bg-gray-800 rounded-sm first:row-span-4 first:self-end hover:border hover:border-red-500 size-3\"></button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div><div class=\"grid grid-cols-3 w-full\"><span class=\"text-center\">Daily Average: 0 hours</span> <span class=\"text-center\">Current Streak: 0 days</span> <span class=\"text-center\">Longest Streak: 0 days</span></div><hr class=\"my-5 w-full\"><div x-data=\"{ modalOpen: false }\"><div id=\"detailed-log-section\"><h2 class=\"heading-primary\">/ Day Stats</h2><div><p>Select a day on the heatmap for more info...</p></div></div>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = EditDailyLogModal().Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><script src=\"/assets/js/htmx-2.0.4.min.js\"></script> <script src=\"/assets/js/alpine-3.14.8.min.js\"></script>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div><div class=\"grid grid-cols-3 w-full\"><span class=\"text-center\">Daily Average: 0 hours</span> <span class=\"text-center\">Current Streak: 0 days</span> <span class=\"text-center\">Longest Streak: 0 days</span></div><hr class=\"my-5 w-full\"><div x-data=\"{ modalOpen: false }\"><div id=\"detailed-log-section\"><h2 class=\"heading-primary\">/ Day Stats</h2><div><p>Select a day on the heatmap for more info...</p></div></div></div><script src=\"/assets/js/htmx-2.0.4.min.js\"></script> <script src=\"/assets/js/alpine-3.14.8.min.js\"></script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

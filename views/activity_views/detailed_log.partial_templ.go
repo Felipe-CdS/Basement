@@ -32,38 +32,37 @@ func DetailedLog(d time.Time, log []models.Activity) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex justify-between items-center\"><h2 class=\"heading-primary\">/ Day Stats - ")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"detailed-log-section\"><div class=\"flex justify-between items-center\"><h2 class=\"heading-primary\">/ Day Stats - ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(formatDate(d))
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(formatDate(d, time.RFC1123))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 12, Col: 32}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 13, Col: 47}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2><button @click=\"$refs.editDialog.showModal()\" class=\"py-0.5 px-2 border border-white\">Edit Day </button></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2><button @click=\"$refs.editDialog.showModal()\" class=\"py-0.5 px-2 border border-white\">Add new entry</button></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if len(log) == 0 {
+		if len(log) != 0 {
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<p>No info for this day...</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		} else {
 			for _, l := range log {
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var3 string
-				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(l.Description)
+				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(l.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 25, Col: 23}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 25, Col: 18}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -74,12 +73,25 @@ func DetailedLog(d time.Time, log []models.Activity) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
+		} else {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h2 class=\"mt-3 text-lg font-semibold\">#1) 10:20AM - 11:10AM | Studied about inotify in C </h2><p class=\"my-2 w-full text-justify indent-10\">The counter is now working and the cookie bugs seem fixed. The solution isn't the prettier one but it works. Studied a little bit about htmx events too and added it to the project. Don't know I'm doing it right though.</p><p class=\"mb-3\">Tags: Programming | Sapos</p><hr class=\"mb-0.5 hr-divider-dashed\"><hr class=\"hr-divider-dashed\"><h2 class=\"mt-3 text-lg font-semibold\">#2) 11:20 - 12:10 - Chapter 5</h2><p class=\"my-3 w-full text-justify indent-10\"></p><p class=\"mb-3\">Tags: Reading | Tao </p><hr class=\"mb-0.5 hr-divider-dashed\"><hr class=\"hr-divider-dashed\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = EditDailyLogModal(d).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
 		}
 		return templ_7745c5c3_Err
 	})
 }
 
-func formatDate(d time.Time) string {
-	holder := d.Format(time.RFC1123)
+func formatDate(d time.Time, timeFormat string) string {
+	holder := d.Format(timeFormat)
 	return strings.TrimSuffix(holder, " 00:00:00 UTC")
 }
