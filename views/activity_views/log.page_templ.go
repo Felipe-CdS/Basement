@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-func Log() templ.Component {
+func Log(partialLog templ.Component) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
@@ -54,9 +54,9 @@ func Log() templ.Component {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var3 string
-				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("log/%s", calcDate(2025, i)))
+				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("log/%s?partial=true", calcDate(2025, i)))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/log.page.templ`, Line: 57, Col: 55}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/log.page.templ`, Line: 57, Col: 68}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -67,13 +67,47 @@ func Log() templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div><div class=\"grid grid-cols-3 w-full\"><span class=\"text-center\">Daily Average: 0 hours</span> <span class=\"text-center\">Current Streak: 0 days</span> <span class=\"text-center\">Longest Streak: 0 days</span></div><hr class=\"my-5 w-full\"><div x-data=\"{ modalOpen: false }\"><div id=\"detailed-log-section\"><h2 class=\"heading-primary\">/ Day Stats</h2><div><p>Select a day on the heatmap for more info...</p></div></div></div><script src=\"/assets/js/htmx-2.0.4.min.js\"></script> <script src=\"/assets/js/alpine-3.14.8.min.js\"></script>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div><div class=\"grid grid-cols-3 w-full\"><span class=\"text-center\">Daily Average: 0 hours</span> <span class=\"text-center\">Current Streak: 0 days</span> <span class=\"text-center\">Longest Streak: 0 days</span></div><hr class=\"my-5 w-full\"><div x-data=\"{ modalOpen: false }\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = partialLog.Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><script src=\"/assets/js/htmx-2.0.4.min.js\"></script> <script src=\"/assets/js/alpine-3.14.8.min.js\"></script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return templ_7745c5c3_Err
 		})
 		templ_7745c5c3_Err = layouts_view.StaticHome().Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return templ_7745c5c3_Err
+	})
+}
+
+func NoLogSelected() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var4 == nil {
+			templ_7745c5c3_Var4 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"detailed-log-section\"><h2 class=\"heading-primary\">/ Day Stats</h2><div><p>Select a day on the heatmap for more info...</p></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

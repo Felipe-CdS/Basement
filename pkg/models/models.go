@@ -10,6 +10,7 @@ var ErrDbOperation = errors.New("models: database operation failed")
 var ErrActityTypeNotFound = errors.New("models: activity type doesnt exist")
 var ErrNotFinished = errors.New("models: there is one or more activities not finished yet")
 var ErrAlreadyExists = errors.New("models: entry already exists")
+var ErrInvalidInsert = errors.New("models: something wrong with the insert data")
 
 type TagEnum string
 

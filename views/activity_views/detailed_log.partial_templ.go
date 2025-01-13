@@ -10,11 +10,12 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"nugu.dev/basement/pkg/models"
+	"strconv"
 	"strings"
 	"time"
 )
 
-func DetailedLog(d time.Time, log []models.Activity) templ.Component {
+func DetailedLog(d time.Time, log []models.Activity, tags []models.Tag) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
@@ -39,7 +40,7 @@ func DetailedLog(d time.Time, log []models.Activity) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(formatDate(d, time.RFC1123))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 13, Col: 47}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 14, Col: 47}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -50,36 +51,84 @@ func DetailedLog(d time.Time, log []models.Activity) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if len(log) != 0 {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<p>No info for this day...</p>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			for _, l := range log {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div>")
+			for i, l := range log {
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h2 class=\"mt-3 text-lg font-semibold\">#")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var3 string
-				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(l.Title)
+				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(i))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 25, Col: 18}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 26, Col: 23}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(")  ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var4 string
+				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(l.StartTime.Format(time.Kitchen))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 27, Col: 39}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" - ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var5 string
+				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(l.EndTime.Format(time.Kitchen))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 28, Col: 39}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" | ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var6 string
+				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(l.Title)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 29, Col: 16}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2><p class=\"my-2 w-full text-justify indent-10\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var7 string
+				templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(l.Description)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 32, Col: 20}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</p><p class=\"mb-3\">Tags: Programming | Sapos</p><hr class=\"mb-0.5 hr-divider-dashed\"><hr class=\"hr-divider-dashed\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
 		} else {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h2 class=\"mt-3 text-lg font-semibold\">#1) 10:20AM - 11:10AM | Studied about inotify in C </h2><p class=\"my-2 w-full text-justify indent-10\">The counter is now working and the cookie bugs seem fixed. The solution isn't the prettier one but it works. Studied a little bit about htmx events too and added it to the project. Don't know I'm doing it right though.</p><p class=\"mb-3\">Tags: Programming | Sapos</p><hr class=\"mb-0.5 hr-divider-dashed\"><hr class=\"hr-divider-dashed\"><h2 class=\"mt-3 text-lg font-semibold\">#2) 11:20 - 12:10 - Chapter 5</h2><p class=\"my-3 w-full text-justify indent-10\"></p><p class=\"mb-3\">Tags: Reading | Tao </p><hr class=\"mb-0.5 hr-divider-dashed\"><hr class=\"hr-divider-dashed\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<p>No info for this day...</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = EditDailyLogModal(d).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = EditDailyLogModal(d, tags).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

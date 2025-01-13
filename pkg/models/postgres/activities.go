@@ -46,7 +46,7 @@ func (a *ActivityRepository) EndActivity() error {
 
 	// If last Activity is already Finished return nil
 	if endTime.Valid {
-		return nil
+		return models.ErrNotFound
 	}
 
 	stmt = `UPDATE activities 
@@ -60,6 +60,27 @@ func (a *ActivityRepository) EndActivity() error {
 	}
 
 	return nil
+}
+
+func (a *ActivityRepository) NewCompleteActivity(x models.Activity) (int, error) {
+
+	var newId int
+
+	stmt := `INSERT INTO activities(start_time, end_time, title, description)
+			VALUES($1, $2, $3, $4) 
+			RETURNING activities.id;`
+
+	if x.StartTime.IsZero() || x.EndTime.IsZero() {
+		return 0, models.ErrInvalidInsert
+	}
+
+	err := a.Db.QueryRow(stmt, x.StartTime, x.EndTime, x.Title, x.Description).Scan(&newId)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return newId, nil
 }
 
 func (a *ActivityRepository) GetLastActivity() (models.Activity, error) {

@@ -53,8 +53,18 @@ func (a *application) routes() *http.ServeMux {
 	})
 
 	mux.HandleFunc("/log", func(w http.ResponseWriter, r *http.Request) {
-		component := activity_views.Log()
+		component := activity_views.Log(activity_views.NoLogSelected())
 		component.Render(r.Context(), w)
+	})
+
+	mux.HandleFunc("/log/create", func(w http.ResponseWriter, r *http.Request) {
+
+		if err := a.AuthMiddleware(w, r); err != nil {
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
+		}
+
+		a.CreateDailyLog(w, r)
 	})
 
 	mux.HandleFunc("/log/{date}", func(w http.ResponseWriter, r *http.Request) {

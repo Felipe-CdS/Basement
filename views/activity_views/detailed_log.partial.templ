@@ -2,11 +2,12 @@ package activity_views
 
 import (
 	"nugu.dev/basement/pkg/models"
+	"strconv"
 	"strings"
 	"time"
 )
 
-templ DetailedLog(d time.Time, log []models.Activity) {
+templ DetailedLog(d time.Time, log []models.Activity, tags []models.Tag) {
 	<div id="detailed-log-section">
 		<div class="flex justify-between items-center">
 			<h2 class="heading-primary">
@@ -20,31 +21,24 @@ templ DetailedLog(d time.Time, log []models.Activity) {
 			</button>
 		</div>
 		if len(log) != 0 {
-			<p>No info for this day...</p>
-			for _, l := range log {
-				<div>{ l.Title }</div>
+			for i, l := range log {
+				<h2 class="mt-3 text-lg font-semibold">
+					#{ strconv.Itoa(i) }) 
+					{ l.StartTime.Format(time.Kitchen) }
+					- { l.EndTime.Format(time.Kitchen) }
+					| { l.Title }
+				</h2>
+				<p class="my-2 w-full text-justify indent-10">
+					{ l.Description }
+				</p>
+				<p class="mb-3">Tags: Programming | Sapos</p>
+				<hr class="mb-0.5 hr-divider-dashed"/>
+				<hr class="hr-divider-dashed"/>
 			}
 		} else {
-			<h2 class="mt-3 text-lg font-semibold">
-				#1) 10:20AM - 11:10AM | Studied about inotify in C 
-			</h2>
-			<p class="my-2 w-full text-justify indent-10">
-				The counter is now working and the cookie bugs seem fixed. The solution isn't the prettier one
-				but it works. Studied a little bit about htmx events too and added it to the project. Don't know
-				I'm doing it right though.
-			</p>
-			<p class="mb-3">Tags: Programming | Sapos</p>
-			<hr class="mb-0.5 hr-divider-dashed"/>
-			<hr class="hr-divider-dashed"/>
-			<h2 class="mt-3 text-lg font-semibold">
-				#2) 11:20 - 12:10 - Chapter 5
-			</h2>
-			<p class="my-3 w-full text-justify indent-10"></p>
-			<p class="mb-3">Tags: Reading | Tao </p>
-			<hr class="mb-0.5 hr-divider-dashed"/>
-			<hr class="hr-divider-dashed"/>
+			<p>No info for this day...</p>
 		}
-		@EditDailyLogModal(d)
+		@EditDailyLogModal(d, tags)
 	</div>
 }
 

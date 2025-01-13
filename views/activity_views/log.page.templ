@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-templ Log() {
+templ Log(partialLog templ.Component) {
 	@layouts_view.StaticHome() {
 		<h1 class="text-3xl font-semibold text-center">
 			/ Habits Log / 
@@ -54,7 +54,7 @@ templ Log() {
 			>
 				for i := 0; i < 365; i++ {
 					<button
-						hx-get={ fmt.Sprintf("log/%s", calcDate(2025, i)) }
+						hx-get={ fmt.Sprintf("log/%s?partial=true", calcDate(2025, i)) }
 						hx-target="#detailed-log-section"
 						hx-swap="outerHTML"
 						class="bg-gray-800 rounded-sm first:row-span-4 first:self-end hover:border hover:border-red-500 size-3"
@@ -75,16 +75,20 @@ templ Log() {
 		</div>
 		<hr class="my-5 w-full"/>
 		<div x-data="{ modalOpen: false }">
-			<div id="detailed-log-section">
-				<h2 class="heading-primary">/ Day Stats</h2>
-				<div>
-					<p>Select a day on the heatmap for more info...</p>
-				</div>
-			</div>
+			@partialLog
 		</div>
 		<script src="/assets/js/htmx-2.0.4.min.js"></script>
 		<script src="/assets/js/alpine-3.14.8.min.js"></script>
 	}
+}
+
+templ NoLogSelected() {
+	<div id="detailed-log-section">
+		<h2 class="heading-primary">/ Day Stats</h2>
+		<div>
+			<p>Select a day on the heatmap for more info...</p>
+		</div>
+	</div>
 }
 
 func calcDate(selectedYear int, i int) string {

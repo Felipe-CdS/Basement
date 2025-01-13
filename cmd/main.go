@@ -16,6 +16,7 @@ type application struct {
 	ReadBucketURL        string
 	RWBucketURL          string
 	activitiesRepository *postgres.ActivityRepository
+	tagsRepository       *postgres.TagRepository
 }
 
 func main() {
@@ -29,6 +30,7 @@ func main() {
 		ReadBucketURL:        os.Getenv("PUBLIC_SINGLE_READ_BUCKET"),
 		RWBucketURL:          os.Getenv("PRIVATE_LIST_RW_BUCKET"),
 		activitiesRepository: &postgres.ActivityRepository{Db: db},
+		tagsRepository:       &postgres.TagRepository{Db: db},
 	}
 
 	srv := &http.Server{
