@@ -105,30 +105,11 @@ func (app *application) finishActivity(w http.ResponseWriter, r *http.Request) {
 	component.Render(r.Context(), w)
 }
 
+/* ========================================================================== */
+
 func (app *application) GetDailyLog(w http.ResponseWriter, r *http.Request) {
 
-	dateReq, err := time.Parse(time.DateOnly, r.PathValue("date"))
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	log, err := app.activitiesRepository.GetDailyLog(dateReq)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	tags, err := app.tagsRepository.GetActivityTags()
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	partialLog := activity_views.DetailedLog(dateReq, log, tags)
+	partialLog := app.ShowDailyLog(r.PathValue("date"))
 
 	reqType := r.URL.Query().Get("partial")
 	if reqType == "true" {
@@ -136,9 +117,72 @@ func (app *application) GetDailyLog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	page := activity_views.Log(partialLog)
+	var calendarLog []models.ActivityDayOverview
+
+	from, to := r.URL.Query().Get("from"), r.URL.Query().Get("to")
+
+	if from == "" || to == "" {
+		today := time.Now()
+		startDate := time.Date(today.Year(), 1, 1, 0, 0, 0, 0, time.UTC)
+		endDate := startDate.AddDate(1, 0, 0).AddDate(0, 0, -1)
+		calendarHolder, err := app.activitiesRepository.GetIntervalLog(startDate, endDate)
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+	Outer:
+		for d := startDate; !d.After(endDate); d = d.AddDate(0, 0, 1) {
+
+			for _, x := range calendarHolder {
+				if x.Date.Equal(d) {
+					x.TotalSec = Fromuint8ToInt(x.TotalAge)
+					calendarLog = append(calendarLog, x)
+					continue Outer
+				}
+			}
+
+			x := models.ActivityDayOverview{Date: d, TotalSec: 0}
+			calendarLog = append(calendarLog, x)
+		}
+	}
+
+	page := activity_views.Log(calendarLog, partialLog)
 	page.Render(r.Context(), w)
 }
+
+/* ========================================================================== */
+
+// GET Show single daily log partial
+func (app *application) ShowDailyLog(selected string) templ.Component {
+
+	if selected == "" {
+		return activity_views.NoLogSelected()
+	}
+
+	dateReq, err := time.Parse(time.DateOnly, selected)
+
+	if err != nil {
+		return activity_views.NoLogSelected()
+	}
+
+	log, err := app.activitiesRepository.GetDailyLog(dateReq)
+
+	if err != nil {
+		return activity_views.NoLogSelected()
+	}
+
+	tags, err := app.tagsRepository.GetActivityTags()
+
+	if err != nil {
+		return activity_views.NoLogSelected()
+	}
+
+	return activity_views.DetailedLog(dateReq, log, tags)
+}
+
+/* ========================================================================== */
 
 // GET modal that creates a new daily log
 func (app *application) NewDailyLog(w http.ResponseWriter, r *http.Request) {
@@ -167,6 +211,8 @@ func (app *application) NewDailyLog(w http.ResponseWriter, r *http.Request) {
 	component := activity_views.DetailedLog(dateReq, log, tags)
 	component.Render(r.Context(), w)
 }
+
+/* ========================================================================== */
 
 // POST form to create new log
 func (app *application) CreateDailyLog(w http.ResponseWriter, r *http.Request) {

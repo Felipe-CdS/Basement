@@ -622,11 +622,6 @@ td, th {
   margin-bottom: 0.5rem;
 }
 
-.my-3 {
-  margin-top: 0.75rem;
-  margin-bottom: 0.75rem;
-}
-
 .my-5 {
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;
@@ -1016,6 +1011,11 @@ td, th {
 
 .bg-transparent {
   background-color: transparent;
+}
+
+.bg-red-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(239 68 68 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-90 {

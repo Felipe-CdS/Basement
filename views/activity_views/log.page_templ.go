@@ -10,11 +10,12 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"fmt"
+	"nugu.dev/basement/pkg/models"
 	layouts_view "nugu.dev/basement/views/layouts"
 	"time"
 )
 
-func Log(partialLog templ.Component) templ.Component {
+func Log(calendarLog []models.ActivityDayOverview, partialLog templ.Component) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
@@ -48,21 +49,39 @@ func Log(partialLog templ.Component) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			for i := 0; i < 365; i++ {
+			for _, d := range calendarLog {
+				var templ_7745c5c3_Var3 = []any{fmt.Sprintf("%s rounded-sm first:row-span-4 first:self-end hover:border hover:border-red-500 size-3", getCalendarDayBg(d.TotalSec))}
+				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var3...)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button hx-get=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var3 string
-				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("log/%s?partial=true", calcDate(2025, i)))
+				var templ_7745c5c3_Var4 string
+				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("log/%s?partial=true", d.Date.Format(time.DateOnly)))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/log.page.templ`, Line: 57, Col: 68}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/log.page.templ`, Line: 58, Col: 79}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#detailed-log-section\" hx-swap=\"outerHTML\" class=\"bg-gray-800 rounded-sm first:row-span-4 first:self-end hover:border hover:border-red-500 size-3\"></button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#detailed-log-section\" hx-swap=\"outerHTML\" class=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var5 string
+				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var3).String())
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/log.page.templ`, Line: 1, Col: 0}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"></button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -102,9 +121,9 @@ func NoLogSelected() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var4 == nil {
-			templ_7745c5c3_Var4 = templ.NopComponent
+		templ_7745c5c3_Var6 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var6 == nil {
+			templ_7745c5c3_Var6 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"detailed-log-section\"><h2 class=\"heading-primary\">/ Day Stats</h2><div><p>Select a day on the heatmap for more info...</p></div></div>")
@@ -122,4 +141,11 @@ func calcDate(selectedYear int, i int) string {
 	r = r.Add(dur)
 
 	return r.Format(time.DateOnly)
+}
+
+func getCalendarDayBg(total int) string {
+	if total > 10 {
+		return "bg-red-500"
+	}
+	return "bg-gray-800"
 }

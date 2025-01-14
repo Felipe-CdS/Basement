@@ -177,3 +177,39 @@ func (a *ActivityRepository) GetDailyLog(date time.Time) ([]models.Activity, err
 
 	return search, nil
 }
+
+func (a *ActivityRepository) GetIntervalLog(start time.Time, end time.Time) ([]models.ActivityDayOverview, error) {
+
+	var search []models.ActivityDayOverview
+
+	stmt := `SELECT start_time::date, SUM(AGE(activities.end_time, activities.start_time))
+			FROM activities
+			 WHERE activities.start_time::date > $1
+			 AND activities.end_time::date < $2
+			 AND activities.end_time IS NOT NULL
+			 GROUP BY start_time::date
+			 ORDER BY start_time::date DESC;`
+
+	rows, err := a.Db.Query(stmt, start.Format(time.DateOnly), end.Format(time.DateOnly))
+
+	if err != nil {
+		log.Println(err)
+		return search, models.ErrDbOperation
+	}
+
+	for rows.Next() {
+		var s models.ActivityDayOverview
+
+		if err = rows.Scan(
+			&s.Date,
+			&s.TotalAge,
+		); err != nil {
+			log.Println(err)
+			return search, models.ErrDbOperation
+		}
+
+		search = append(search, s)
+	}
+
+	return search, nil
+}

@@ -31,6 +31,12 @@ type Activity struct {
 	Age []uint8
 }
 
+type ActivityDayOverview struct {
+	Date     time.Time
+	TotalAge []uint8 // Total seconds of that day
+	TotalSec int     // Total seconds of that day
+}
+
 type Tag struct {
 	ID   int
 	Type TagEnum

@@ -3,7 +3,6 @@ package main
 import (
 	"net/http"
 
-	"nugu.dev/basement/views/activity_views"
 	"nugu.dev/basement/views/static_views"
 )
 
@@ -52,11 +51,6 @@ func (a *application) routes() *http.ServeMux {
 		component.Render(r.Context(), w)
 	})
 
-	mux.HandleFunc("/log", func(w http.ResponseWriter, r *http.Request) {
-		component := activity_views.Log(activity_views.NoLogSelected())
-		component.Render(r.Context(), w)
-	})
-
 	mux.HandleFunc("/log/create", func(w http.ResponseWriter, r *http.Request) {
 
 		if err := a.AuthMiddleware(w, r); err != nil {
@@ -65,6 +59,10 @@ func (a *application) routes() *http.ServeMux {
 		}
 
 		a.CreateDailyLog(w, r)
+	})
+
+	mux.HandleFunc("/log", func(w http.ResponseWriter, r *http.Request) {
+		a.GetDailyLog(w, r)
 	})
 
 	mux.HandleFunc("/log/{date}", func(w http.ResponseWriter, r *http.Request) {
