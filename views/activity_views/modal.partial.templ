@@ -1,6 +1,7 @@
 package activity_views
 
 import (
+	"fmt"
 	"nugu.dev/basement/pkg/models"
 	"strconv"
 	"time"
@@ -63,7 +64,7 @@ templ EditDailyLogModal(d time.Time, tags []models.Tag) {
 							<input
 								type="checkbox"
 								class="inline mr-0.5"
-								name={ strconv.Itoa(t.ID) }
+								name={ fmt.Sprintf("check-%s", strconv.Itoa(t.ID)) }
 							/>
 							<label class="inline" for={ strconv.Itoa(t.ID) }>
 								{ t.Name }

@@ -1,6 +1,10 @@
 package main
 
-import "strconv"
+import (
+	"strconv"
+	"strings"
+	"time"
+)
 
 /* Postgres can return duration from AGE() method. This return has []uint8 type.
 * This method transforms that to the duration in seconds */
@@ -43,4 +47,31 @@ func Fromuint8ToInt(entry []uint8) int {
 	}
 
 	return total
+}
+
+func From24ClockToTime(date string, hourMinTime string) (time.Time, error) {
+
+	dateTime, err := time.Parse(time.DateOnly, date)
+
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	holder := strings.Split(hourMinTime, ":")
+	entryHours, err := strconv.Atoi(holder[0])
+
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	entryMinutes, err := strconv.Atoi(holder[1])
+
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	dateTime = dateTime.Add(time.Hour * time.Duration(entryHours))
+	dateTime = dateTime.Add(time.Minute * time.Duration(entryMinutes))
+
+	return dateTime, nil
 }

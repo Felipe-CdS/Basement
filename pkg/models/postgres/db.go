@@ -76,9 +76,10 @@ func (dbStore *Store) getConnection() error {
 func createMigrations(db *sql.DB) error {
 
 	// CREATE DATABASE basement TEMPLATE template0;
-	// SET timezone TO 'UTC';
 
 	statement := `
+	SET timezone TO 'UTC';
+
 	CREATE TABLE IF NOT EXISTS tags (
 		"id" SERIAL PRIMARY KEY
 		, "type" VARCHAR (50) NOT NULL

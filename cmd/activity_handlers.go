@@ -110,7 +110,6 @@ func (app *application) finishActivity(w http.ResponseWriter, r *http.Request) {
 func (app *application) GetDailyLog(w http.ResponseWriter, r *http.Request) {
 
 	partialLog := app.ShowDailyLog(r.PathValue("date"))
-
 	reqType := r.URL.Query().Get("partial")
 	if reqType == "true" {
 		partialLog.Render(r.Context(), w)
@@ -137,7 +136,6 @@ func (app *application) GetDailyLog(w http.ResponseWriter, r *http.Request) {
 
 			for _, x := range calendarHolder {
 				if x.Date.Equal(d) {
-					x.TotalSec = Fromuint8ToInt(x.TotalAge)
 					calendarLog = append(calendarLog, x)
 					continue Outer
 				}
@@ -217,33 +215,6 @@ func (app *application) NewDailyLog(w http.ResponseWriter, r *http.Request) {
 // POST form to create new log
 func (app *application) CreateDailyLog(w http.ResponseWriter, r *http.Request) {
 
-	var from24ClockToTime = func(date string, hourMinTime string) (time.Time, error) {
-
-		dateTime, err := time.Parse(time.DateOnly, date)
-
-		if err != nil {
-			return time.Time{}, err
-		}
-
-		holder := strings.Split(hourMinTime, ":")
-		entryHours, err := strconv.Atoi(holder[0])
-
-		if err != nil {
-			return time.Time{}, err
-		}
-
-		entryMinutes, err := strconv.Atoi(holder[1])
-
-		if err != nil {
-			return time.Time{}, err
-		}
-
-		dateTime = dateTime.Add(time.Hour * time.Duration(entryHours))
-		dateTime = dateTime.Add(time.Minute * time.Duration(entryMinutes))
-
-		return dateTime, nil
-	}
-
 	r.ParseForm()
 
 	var a models.Activity
@@ -251,17 +222,33 @@ func (app *application) CreateDailyLog(w http.ResponseWriter, r *http.Request) {
 
 	a.Title = r.FormValue("title")
 	a.Description = r.FormValue("description")
-	a.StartTime, err = from24ClockToTime(r.FormValue("date"), r.FormValue("start"))
+	a.StartTime, err = From24ClockToTime(r.FormValue("date"), r.FormValue("start"))
+
+	for k, vs := range r.Form {
+		for _, v := range vs {
+			if strings.Contains(k, "check-") {
+				var t models.Tag
+				t.ID, _ = strconv.Atoi(strings.Split(k, "-")[1])
+				t.Name = v
+				a.Tags = append(a.Tags, t)
+			}
+		}
+	}
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	a.EndTime, err = from24ClockToTime(r.FormValue("date"), r.FormValue("end"))
+	a.EndTime, err = From24ClockToTime(r.FormValue("date"), r.FormValue("end"))
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if a.StartTime.After(a.EndTime) {
+		http.Error(w, fmt.Errorf("start > finish").Error(), http.StatusBadRequest)
 		return
 	}
 

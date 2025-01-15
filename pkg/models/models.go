@@ -29,6 +29,8 @@ type Activity struct {
 	// Age = EndTime - StartTime
 	// Special Property that the DB returns on some queries
 	Age []uint8
+
+	Tags []Tag // For query with tags search
 }
 
 type ActivityDayOverview struct {

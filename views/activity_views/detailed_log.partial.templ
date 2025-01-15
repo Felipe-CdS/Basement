@@ -31,7 +31,12 @@ templ DetailedLog(d time.Time, log []models.Activity, tags []models.Tag) {
 				<p class="my-2 w-full text-justify indent-10">
 					{ l.Description }
 				</p>
-				<p class="mb-3">Tags: Programming | Sapos</p>
+				<p class="mb-3">
+					Tags: 
+					for _, a := range l.Tags {
+						<span>{ a.Name } | </span>
+					}
+				</p>
 				<hr class="mb-0.5 hr-divider-dashed"/>
 				<hr class="hr-divider-dashed"/>
 			}
