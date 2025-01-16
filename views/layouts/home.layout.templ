@@ -3,10 +3,15 @@ package layouts_view
 templ StaticHome() {
 	@Base() {
 		<div
-			class="mx-auto w-full bg-cover lg:w-10/12 xl:w-4/12 min-h-52"
+			class="relative mx-auto w-full bg-cover lg:w-10/12 xl:w-4/12 min-h-52"
 			style="background-image: url(assets/img/banners/banner2.png);
 				background-position: 0% 80%;"
-		></div>
+		>
+			<a
+				href="/login"
+				class="absolute right-0 w-1/12 h-1/6"
+			></a>
+		</div>
 		<h1 class="mx-auto mt-2 text-4xl heading-primary font-kr">
 			나도 몰라...
 		</h1>
@@ -39,26 +44,6 @@ templ StaticHome() {
 					</li>
 				</ul>
 				<hr class="my-5 w-11/12"/>
-				<ul class="space-y-5">
-					<li class="list-none">
-						<audio
-							class="w-9/12"
-							id="noise"
-							loop
-							controls
-							src="/assets/audio/noise.mp3"
-						></audio>
-					</li>
-					<li class="list-none">
-						<audio
-							class="w-9/12"
-							id="noise"
-							loop
-							controls
-							src="/assets/audio/rain.mp3"
-						></audio>
-					</li>
-				</ul>
 			</div>
 			<div class="flex overflow-hidden flex-col px-10 w-2/3">
 				{ children... }

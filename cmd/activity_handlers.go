@@ -109,7 +109,14 @@ func (app *application) finishActivity(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) GetDailyLog(w http.ResponseWriter, r *http.Request) {
 
-	partialLog := app.ShowDailyLog(r.PathValue("date"))
+	loggedUser := true
+	authToken, err := r.Cookie("t")
+
+	if err != nil || authToken.Value != app.AuthToken {
+		loggedUser = false
+	}
+
+	partialLog := app.ShowDailyLog(r.PathValue("date"), loggedUser)
 	reqType := r.URL.Query().Get("partial")
 	if reqType == "true" {
 		partialLog.Render(r.Context(), w)
@@ -146,14 +153,14 @@ func (app *application) GetDailyLog(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	page := activity_views.Log(calendarLog, partialLog)
+	page := activity_views.Log(calendarLog, partialLog, loggedUser)
 	page.Render(r.Context(), w)
 }
 
 /* ========================================================================== */
 
 // GET Show single daily log partial
-func (app *application) ShowDailyLog(selected string) templ.Component {
+func (app *application) ShowDailyLog(selected string, loggedUser bool) templ.Component {
 
 	if selected == "" {
 		return activity_views.NoLogSelected()
@@ -177,37 +184,7 @@ func (app *application) ShowDailyLog(selected string) templ.Component {
 		return activity_views.NoLogSelected()
 	}
 
-	return activity_views.DetailedLog(dateReq, log, tags)
-}
-
-/* ========================================================================== */
-
-// GET modal that creates a new daily log
-func (app *application) NewDailyLog(w http.ResponseWriter, r *http.Request) {
-
-	dateReq, err := time.Parse(time.DateOnly, r.PathValue("date"))
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	log, err := app.activitiesRepository.GetDailyLog(dateReq)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	tags, err := app.tagsRepository.GetActivityTags()
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	component := activity_views.DetailedLog(dateReq, log, tags)
-	component.Render(r.Context(), w)
+	return activity_views.DetailedLog(dateReq, log, tags, loggedUser)
 }
 
 /* ========================================================================== */

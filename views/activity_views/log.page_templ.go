@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-func Log(calendarLog []models.ActivityDayOverview, partialLog templ.Component) templ.Component {
+func Log(calendarLog []models.ActivityDayOverview, partialLog templ.Component, loggedUser bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
@@ -144,8 +144,20 @@ func calcDate(selectedYear int, i int) string {
 }
 
 func getCalendarDayBg(total int) string {
-	if total > 10 {
-		return "bg-red-500"
+	if total >= 3600 && total < 7200 {
+		return "bg-green-800"
+	}
+	if total >= 7200 && total < 10800 {
+		return "bg-green-700"
+	}
+	if total >= 10800 && total < 14400 {
+		return "bg-green-600"
+	}
+	if total >= 14400 && total < 18000 {
+		return "bg-green-400"
+	}
+	if total >= 18000 {
+		return "bg-amber-400"
 	}
 	return "bg-gray-800"
 }

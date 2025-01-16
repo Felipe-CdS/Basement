@@ -77,7 +77,7 @@ func (app *application) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method == "GET" {
-		component := layouts_view.Login()
+		component := layouts_view.LoginPage()
 		component.Render(r.Context(), w)
 		return
 	}
