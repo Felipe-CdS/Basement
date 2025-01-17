@@ -38,7 +38,13 @@ templ DetailedLog(d time.Time, log []models.Activity, tags []models.Tag, loggedU
 					}
 				</div>
 				<p class="my-2 w-full text-justify indent-10">
-					{ l.Description }
+					if l.Description != "" {
+						{ l.Description }
+					} else {
+						<span class="italic">
+							No Description provided.
+						</span>
+					}
 				</p>
 				<div class="flex justify-between w-full">
 					<p class="mb-5">

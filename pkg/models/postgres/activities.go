@@ -229,7 +229,7 @@ func (a *ActivityRepository) GetIntervalLog(start time.Time, end time.Time) ([]m
 
 	stmt := `SELECT start_time::date, FLOOR(EXTRACT(EPOCH FROM SUM(AGE(activities.end_time, activities.start_time))))
 			FROM activities
-			 WHERE activities.start_time::date > $1
+			 WHERE activities.start_time::date >= $1
 			 AND activities.end_time::date < $2
 			 AND activities.end_time IS NOT NULL
 			 GROUP BY start_time::date
