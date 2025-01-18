@@ -239,6 +239,34 @@ func (app *application) CreateDailyLog(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, fmt.Sprintf("/log/%s", r.FormValue("date")), http.StatusSeeOther)
 }
 
+/* ========================================================================== */
+
+func (app *application) EditDailyLog(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == http.MethodGet {
+
+		log, err := app.activitiesRepository.GetSingleDetailedLogById(r.PathValue("id"))
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+
+		tags, err := app.tagsRepository.GetActivityTags()
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		component := activity_views.EditDailyLogModalInternal(log, tags)
+		component.Render(r.Context(), w)
+		return
+	}
+}
+
+/* ========================================================================== */
+
 func setCookie(w http.ResponseWriter, startTime time.Time, endTime time.Time) {
 
 	startTimerCookie := http.Cookie{Name: "start"}

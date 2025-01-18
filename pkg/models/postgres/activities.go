@@ -223,6 +223,48 @@ func (a *ActivityRepository) GetDailyLog(date time.Time) ([]models.Activity, err
 	return search, nil
 }
 
+func (a *ActivityRepository) GetSingleDetailedLogById(id string) (models.Activity, error) {
+
+	var s models.Activity
+	var title, description sql.NullString
+	var endTime sql.NullTime
+
+	stmt := `SELECT id, start_time, end_time, title, description, AGE(activities.end_time, activities.start_time)
+			FROM activities
+			WHERE id = $1;`
+
+	if err := a.Db.QueryRow(stmt, id).Scan(
+		&s.ID,
+		&s.StartTime,
+		&endTime,
+		&title,
+		&description,
+		&s.Age,
+	); err != nil {
+		return s, models.ErrDbOperation
+	}
+
+	if title.Valid {
+		s.Title = title.String
+	} else {
+		s.Title = ""
+	}
+
+	if description.Valid {
+		s.Description = description.String
+	} else {
+		s.Description = ""
+	}
+
+	if endTime.Valid {
+		s.EndTime = endTime.Time
+	} else {
+		s.EndTime = time.Time{}
+	}
+
+	return s, nil
+}
+
 func (a *ActivityRepository) GetIntervalLog(start time.Time, end time.Time) ([]models.ActivityDayOverview, error) {
 
 	var search []models.ActivityDayOverview

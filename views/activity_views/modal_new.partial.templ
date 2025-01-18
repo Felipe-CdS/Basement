@@ -7,10 +7,10 @@ import (
 	"time"
 )
 
-templ EditDailyLogModal(d time.Time, tags []models.Tag) {
+templ NewDailyLogModal(d time.Time, tags []models.Tag) {
 	<dialog
-		id="editDialog"
-		x-ref="editDialog"
+		id="newDialog"
+		x-ref="newDialog"
 		class="relative self-center place-self-center py-5 px-6 w-4/12 rounded backdrop:bg-black backdrop:bg-opacity-40 backdrop:backdrop-blur-[2px]"
 		x-on:keyup.escape="modalOpen = false; document.body.classList.remove('no-scroll');"
 	>
@@ -18,7 +18,7 @@ templ EditDailyLogModal(d time.Time, tags []models.Tag) {
 			<h1 class="inline text-xl font-semibold">
 				New entry ({ formatDate(d, time.RFC1123) })
 			</h1>
-			<button x-on:click="$refs.editDialog.close()">
+			<button x-on:click="$refs.newDialog.close()">
 				<img class="size-6" src="/assets/img/x.svg"/>
 			</button>
 		</div>

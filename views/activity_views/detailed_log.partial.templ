@@ -1,6 +1,7 @@
 package activity_views
 
 import (
+	"fmt"
 	"nugu.dev/basement/pkg/models"
 	"strconv"
 	"strings"
@@ -15,7 +16,7 @@ templ DetailedLog(d time.Time, log []models.Activity, tags []models.Tag, loggedU
 			</h2>
 			if loggedUser {
 				<button
-					@click="$refs.editDialog.showModal()"
+					@click="$refs.newDialog.showModal()"
 					class="py-0.5 px-2 border border-white"
 				>
 					Add new entry
@@ -32,7 +33,11 @@ templ DetailedLog(d time.Time, log []models.Activity, tags []models.Tag, loggedU
 						| { l.Title }
 					</h2>
 					if loggedUser {
-						<button>
+						<button
+							hx-target="#editDialog"
+							hx-get={ fmt.Sprintf("/log/%d/edit", l.ID) }
+							@click="$refs.editDialog.showModal()"
+						>
 							<img class="invert" src="assets/img/edit.svg"/>
 						</button>
 					}
@@ -65,7 +70,8 @@ templ DetailedLog(d time.Time, log []models.Activity, tags []models.Tag, loggedU
 		} else {
 			<p>No info for this day...</p>
 		}
-		@EditDailyLogModal(d, tags)
+		@NewDailyLogModal(d, tags)
+		@EditDailyLogModal()
 	</div>
 }
 

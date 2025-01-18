@@ -1,0 +1,100 @@
+package activity_views
+
+import (
+	"fmt"
+	"nugu.dev/basement/pkg/models"
+	"strconv"
+	"time"
+)
+
+templ EditDailyLogModal() {
+	<dialog
+		id="editDialog"
+		x-ref="editDialog"
+		class="relative self-center place-self-center py-5 px-6 w-4/12 rounded backdrop:bg-black backdrop:bg-opacity-40 backdrop:backdrop-blur-[2px]"
+		x-on:keyup.escape="modalOpen = false; document.body.classList.remove('no-scroll');"
+	></dialog>
+}
+
+templ EditDailyLogModalInternal(log models.Activity, tags []models.Tag) {
+	<div class="flex justify-between items-center mb-3 space-x-9">
+		<h1 class="inline text-xl font-semibold">
+			Edit entry ({ formatDate(log.StartTime, time.RFC1123) })
+		</h1>
+		<button x-on:click="$refs.editDialog.close()">
+			<img class="size-6" src="/assets/img/x.svg"/>
+		</button>
+	</div>
+	<form
+		id="edit-log-form"
+		hx-put="/log/%d/edit"
+		hx-target="body"
+		class="flex flex-col items-center"
+	>
+		<input
+			class="hidden"
+			type="text"
+			name="id"
+			value={ fmt.Sprintf("%d", log.ID) }
+		/>
+		<div class="grid grid-cols-2 w-full">
+			<label for="start">Start:</label>
+			<input
+				class="justify-self-end w-fit"
+				value={ log.StartTime.Format(time.TimeOnly) }
+				type="time"
+				id="start-input"
+				name="start"
+				required
+			/>
+			<label for="start">End:</label>
+			<input
+				class="justify-self-end w-fit"
+				value={ log.EndTime.Format("00:00:00") }
+				type="time"
+				id="start-input"
+				name="end"
+				required
+			/>
+			<label for="start">Title:</label>
+			<input
+				value={ log.Title }
+				type="text"
+				id="title-input"
+				name="title"
+				autocomplete="off"
+				placeholder="Placeholder..."
+				class="col-span-2 px-2 mb-1 w-full border border-black"
+			/>
+			<label for="description">Description:</label>
+			<textarea
+				id="description-input"
+				name="description"
+				rows="8"
+				autocomplete="off"
+				placeholder="Placeholder..."
+				class="col-span-2 px-2 mb-1 w-full border border-black"
+			>
+				{ log.Description }
+			</textarea>
+			<label for="tags">Tags:</label>
+			<div class="grid grid-cols-4 col-span-2 mb-3 w-full">
+				for _, t := range tags {
+					<div class="w-full">
+						<input
+							type="checkbox"
+							class="inline mr-0.5"
+							name={ fmt.Sprintf("check-%s", strconv.Itoa(t.ID)) }
+						/>
+						<label class="inline" for={ strconv.Itoa(t.ID) }>
+							{ t.Name }
+						</label>
+					</div>
+				}
+			</div>
+		</div>
+	</form>
+	<button form="log-form" type="submit" class="p-2 mt-3 w-full font-bold rounded border border-black hover:text-white hover:bg-black hover:bg-opacity-90">
+		Save
+	</button>
+}

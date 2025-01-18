@@ -9,6 +9,7 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
+	"fmt"
 	"nugu.dev/basement/pkg/models"
 	"strconv"
 	"strings"
@@ -40,7 +41,7 @@ func DetailedLog(d time.Time, log []models.Activity, tags []models.Tag, loggedUs
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(formatDate(d, time.RFC1123))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 14, Col: 47}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 15, Col: 47}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -51,7 +52,7 @@ func DetailedLog(d time.Time, log []models.Activity, tags []models.Tag, loggedUs
 			return templ_7745c5c3_Err
 		}
 		if loggedUser {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button @click=\"$refs.editDialog.showModal()\" class=\"py-0.5 px-2 border border-white\">Add new entry</button>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button @click=\"$refs.newDialog.showModal()\" class=\"py-0.5 px-2 border border-white\">Add new entry</button>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -69,7 +70,7 @@ func DetailedLog(d time.Time, log []models.Activity, tags []models.Tag, loggedUs
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(i + 1))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 29, Col: 26}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 30, Col: 26}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -82,7 +83,7 @@ func DetailedLog(d time.Time, log []models.Activity, tags []models.Tag, loggedUs
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(l.StartTime.Format(time.Kitchen))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 30, Col: 40}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 31, Col: 40}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -95,7 +96,7 @@ func DetailedLog(d time.Time, log []models.Activity, tags []models.Tag, loggedUs
 				var templ_7745c5c3_Var5 string
 				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(l.EndTime.Format(time.Kitchen))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 31, Col: 40}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 32, Col: 40}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 				if templ_7745c5c3_Err != nil {
@@ -108,7 +109,7 @@ func DetailedLog(d time.Time, log []models.Activity, tags []models.Tag, loggedUs
 				var templ_7745c5c3_Var6 string
 				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(l.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 32, Col: 17}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 33, Col: 17}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 				if templ_7745c5c3_Err != nil {
@@ -119,7 +120,20 @@ func DetailedLog(d time.Time, log []models.Activity, tags []models.Tag, loggedUs
 					return templ_7745c5c3_Err
 				}
 				if loggedUser {
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button><img class=\"invert\" src=\"assets/img/edit.svg\"></button>")
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button hx-target=\"#editDialog\" hx-get=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var7 string
+					templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/log/%d/edit", l.ID))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 38, Col: 49}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" @click=\"$refs.editDialog.showModal()\"><img class=\"invert\" src=\"assets/img/edit.svg\"></button>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -129,12 +143,12 @@ func DetailedLog(d time.Time, log []models.Activity, tags []models.Tag, loggedUs
 					return templ_7745c5c3_Err
 				}
 				if l.Description != "" {
-					var templ_7745c5c3_Var7 string
-					templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(l.Description)
+					var templ_7745c5c3_Var8 string
+					templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(l.Description)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 42, Col: 21}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 47, Col: 21}
 					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -153,12 +167,12 @@ func DetailedLog(d time.Time, log []models.Activity, tags []models.Tag, loggedUs
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					var templ_7745c5c3_Var8 string
-					templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(a.Name)
+					var templ_7745c5c3_Var9 string
+					templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(a.Name)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 54, Col: 16}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/detailed_log.partial.templ`, Line: 59, Col: 16}
 					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -188,7 +202,11 @@ func DetailedLog(d time.Time, log []models.Activity, tags []models.Tag, loggedUs
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = EditDailyLogModal(d, tags).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = NewDailyLogModal(d, tags).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = EditDailyLogModal().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
