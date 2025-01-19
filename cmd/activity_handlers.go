@@ -174,7 +174,7 @@ func (app *application) ShowDailyLog(selected string, loggedUser bool) templ.Com
 		return activity_views.NoLogSelected()
 	}
 
-	log, err := app.activitiesRepository.GetDailyLog(dateReq)
+	dailyLog, err := app.activitiesRepository.GetDailyLog(dateReq)
 
 	if err != nil {
 		return activity_views.NoLogSelected()
@@ -186,7 +186,7 @@ func (app *application) ShowDailyLog(selected string, loggedUser bool) templ.Com
 		return activity_views.NoLogSelected()
 	}
 
-	return activity_views.DetailedLog(dateReq, log, tags, loggedUser)
+	return activity_views.DetailedLog(dateReq, dailyLog, tags, loggedUser)
 }
 
 /* ========================================================================== */

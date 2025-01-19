@@ -23,7 +23,7 @@ func main() {
 
 	setEnvVars()
 
-	db := postgres.NewPostgresDB(false)
+	db := postgres.NewPostgresDB(false) // true for tests database
 
 	app := &application{
 		AuthToken:            "123",

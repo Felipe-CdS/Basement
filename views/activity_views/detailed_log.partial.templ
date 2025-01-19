@@ -1,7 +1,9 @@
 package activity_views
 
 import (
+	"context"
 	"fmt"
+	"io"
 	"nugu.dev/basement/pkg/models"
 	"strconv"
 	"strings"
@@ -44,7 +46,7 @@ templ DetailedLog(d time.Time, log []models.Activity, tags []models.Tag, loggedU
 				</div>
 				<p class="my-2 w-full text-justify indent-10">
 					if l.Description != "" {
-						{ l.Description }
+						@unsafeAddBreakLines(l.Description)
 					} else {
 						<span class="italic">
 							No Description provided.
@@ -78,4 +80,14 @@ templ DetailedLog(d time.Time, log []models.Activity, tags []models.Tag, loggedU
 func formatDate(d time.Time, timeFormat string) string {
 	holder := d.Format(timeFormat)
 	return strings.TrimSuffix(holder, " 00:00:00 UTC")
+}
+
+func unsafeAddBreakLines(s string) templ.Component {
+
+	replaced := strings.ReplaceAll(s, "\n", "</br>")
+
+	return templ.ComponentFunc(func(ctx context.Context, w io.Writer) (err error) {
+		_, err = io.WriteString(w, replaced)
+		return
+	})
 }

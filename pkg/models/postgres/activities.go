@@ -157,7 +157,7 @@ func (a *ActivityRepository) GetDailyLog(date time.Time) ([]models.Activity, err
 			FROM activities
 			 WHERE activities.start_time::date = $1
 			 AND activities.end_time IS NOT NULL
-			 ORDER BY activities.start_time DESC;`
+			 ORDER BY activities.start_time ASC;`
 
 	rows, err := a.Db.Query(stmt, date.Format(time.DateOnly))
 
@@ -285,7 +285,7 @@ func (a *ActivityRepository) GetIntervalLog(start time.Time, end time.Time, sele
 				AND tags.name LIKE $3
 			) v1
 			GROUP BY start_time::date
-			ORDER BY start_time::date DESC;`
+			ORDER BY start_time::date ASC;`
 
 		rows, err = a.Db.Query(stmt, start.Format(time.DateOnly), end.Format(time.DateOnly), selectedTag)
 
@@ -296,7 +296,7 @@ func (a *ActivityRepository) GetIntervalLog(start time.Time, end time.Time, sele
 			AND activities.end_time::date < $2
 			AND activities.end_time IS NOT NULL
 			GROUP BY start_time::date
-			ORDER BY start_time::date DESC;`
+			ORDER BY start_time::date ASC;`
 
 		rows, err = a.Db.Query(stmt, start.Format(time.DateOnly), end.Format(time.DateOnly))
 	}
