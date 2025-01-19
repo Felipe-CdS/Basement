@@ -123,6 +123,8 @@ func (app *application) GetDailyLog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	tabSelected := r.URL.Query().Get("tab")
+
 	var calendarLog []models.ActivityDayOverview
 
 	from, to := r.URL.Query().Get("from"), r.URL.Query().Get("to")
@@ -131,7 +133,7 @@ func (app *application) GetDailyLog(w http.ResponseWriter, r *http.Request) {
 		today := time.Now()
 		startDate := time.Date(today.Year(), 1, 1, 0, 0, 0, 0, time.UTC)
 		endDate := startDate.AddDate(1, 0, 0).AddDate(0, 0, -1)
-		calendarHolder, err := app.activitiesRepository.GetIntervalLog(startDate, endDate)
+		calendarHolder, err := app.activitiesRepository.GetIntervalLog(startDate, endDate, tabSelected)
 
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)

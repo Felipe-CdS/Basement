@@ -45,7 +45,7 @@ func Log(calendarLog []models.ActivityDayOverview, partialLog templ.Component, l
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h1 class=\"text-3xl font-semibold text-center\">/ Habits Log / </h1><p class=\"text-center\">At least sometimes I need to do something...</p><div class=\"grid grid-cols-5 mt-3 w-full border border-gray-100\"><p class=\"col-span-5 p-0.5 text-center text-black bg-gray-100\">Category</p><button class=\"p-0.5 hover:underline\">Overall</button> <button class=\"p-0.5 hover:underline\">Reading</button> <button class=\"p-0.5 hover:underline\">Programming</button> <button class=\"p-0.5 hover:underline\">Studying</button> <button class=\"p-0.5 hover:underline\">Other Tags</button></div><div class=\"flex pb-2 mt-5\"><div class=\"grid grid-cols-1 gap-1 mr-2\" style=\"grid-template-rows: repeat(7, 0.75rem);\"><span class=\"text-sm leading-[.9rem]\">S</span> <span class=\"text-sm leading-[.9rem]\">M</span> <span class=\"text-sm leading-[.9rem]\">T</span> <span class=\"text-sm leading-[.9rem]\">W</span> <span class=\"text-sm leading-[.9rem]\">T</span> <span class=\"text-sm leading-[.9rem]\">F</span> <span class=\"text-sm leading-[.9rem]\">S</span></div><div class=\"grid overflow-y-scroll grid-flow-col gap-1 pb-2 select-none\" style=\"grid-template-columns: repeat(53, 1fr);\n\t\t\t\tgrid-template-rows: repeat(7, 0.75rem);\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h1 class=\"text-3xl font-semibold text-center\">/ Habits Log / </h1><p class=\"text-center\">At least sometimes I need to do something...</p><div class=\"grid grid-cols-5 mt-3 w-full border border-gray-100\"><p class=\"col-span-5 p-0.5 text-center text-black bg-gray-100\">Category</p><button hx-get=\"/log\" hx-target=\"body\" hx-push-url=\"true\" class=\"p-0.5 hover:underline\">Overall</button> <button hx-get=\"/log?tab=Reading\" hx-target=\"body\" hx-push-url=\"true\" class=\"p-0.5 hover:underline\">Reading</button> <button hx-get=\"/log?tab=Programming\" hx-target=\"body\" hx-push-url=\"true\" class=\"p-0.5 hover:underline\">Programming</button> <button hx-get=\"/log?tab=Studying\" hx-target=\"body\" hx-push-url=\"true\" class=\"p-0.5 hover:underline\">Studying</button> <button class=\"p-0.5 hover:underline\">Other Tags</button></div><div class=\"flex pb-2 mt-5\"><div class=\"grid grid-cols-1 gap-1 mr-2\" style=\"grid-template-rows: repeat(7, 0.75rem);\"><span class=\"text-sm leading-[.9rem]\">S</span> <span class=\"text-sm leading-[.9rem]\">M</span> <span class=\"text-sm leading-[.9rem]\">T</span> <span class=\"text-sm leading-[.9rem]\">W</span> <span class=\"text-sm leading-[.9rem]\">T</span> <span class=\"text-sm leading-[.9rem]\">F</span> <span class=\"text-sm leading-[.9rem]\">S</span></div><div class=\"grid overflow-y-scroll grid-flow-col gap-1 pb-2 select-none\" style=\"grid-template-columns: repeat(53, 1fr);\n\t\t\t\tgrid-template-rows: repeat(7, 0.75rem);\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -62,7 +62,7 @@ func Log(calendarLog []models.ActivityDayOverview, partialLog templ.Component, l
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("log/%s?partial=true", d.Date.Format(time.DateOnly)))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/log.page.templ`, Line: 58, Col: 79}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/activity_views/log.page.templ`, Line: 78, Col: 79}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -144,7 +144,11 @@ func calcDate(selectedYear int, i int) string {
 }
 
 func getCalendarDayBg(total int) string {
-	if total >= 3600 && total < 7200 {
+
+	if total >= 1 && total < 3000 {
+		return "bg-red-800"
+	}
+	if total >= 3000 && total < 7200 {
 		return "bg-green-800"
 	}
 	if total >= 7200 && total < 10800 {
@@ -157,7 +161,7 @@ func getCalendarDayBg(total int) string {
 		return "bg-green-400"
 	}
 	if total >= 18000 {
-		return "bg-amber-400"
+		return "bg-green-300"
 	}
 	return "bg-gray-800"
 }

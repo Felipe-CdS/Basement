@@ -265,19 +265,41 @@ func (a *ActivityRepository) GetSingleDetailedLogById(id string) (models.Activit
 	return s, nil
 }
 
-func (a *ActivityRepository) GetIntervalLog(start time.Time, end time.Time) ([]models.ActivityDayOverview, error) {
+func (a *ActivityRepository) GetIntervalLog(start time.Time, end time.Time, selectedTag string) ([]models.ActivityDayOverview, error) {
 
+	var stmt string
+	var err error
+	var rows *sql.Rows
 	var search []models.ActivityDayOverview
 
-	stmt := `SELECT start_time::date, FLOOR(EXTRACT(EPOCH FROM SUM(AGE(activities.end_time, activities.start_time))))
-			FROM activities
-			 WHERE activities.start_time::date >= $1
-			 AND activities.end_time::date < $2
-			 AND activities.end_time IS NOT NULL
-			 GROUP BY start_time::date
-			 ORDER BY start_time::date DESC;`
+	if selectedTag != "" {
+		stmt = `SELECT start_time::date, FLOOR(EXTRACT(EPOCH FROM SUM(AGE(v1.end_time, v1.start_time))))
+			FROM (
+				SELECT *
+				FROM ((activities
+					JOIN activities_tags ON fk_activity_id = activities.id)
+					JOIN tags ON fk_tag_id = tags.id)
+				WHERE activities.start_time::date >= $1
+				AND activities.end_time::date < $2
+				AND activities.end_time IS NOT NULL
+				AND tags.name LIKE $3
+			) v1
+			GROUP BY start_time::date
+			ORDER BY start_time::date DESC;`
 
-	rows, err := a.Db.Query(stmt, start.Format(time.DateOnly), end.Format(time.DateOnly))
+		rows, err = a.Db.Query(stmt, start.Format(time.DateOnly), end.Format(time.DateOnly), selectedTag)
+
+	} else {
+		stmt = `SELECT start_time::date, FLOOR(EXTRACT(EPOCH FROM SUM(AGE(activities.end_time, activities.start_time))))
+			FROM activities
+			WHERE activities.start_time::date >= $1
+			AND activities.end_time::date < $2
+			AND activities.end_time IS NOT NULL
+			GROUP BY start_time::date
+			ORDER BY start_time::date DESC;`
+
+		rows, err = a.Db.Query(stmt, start.Format(time.DateOnly), end.Format(time.DateOnly))
+	}
 
 	if err != nil {
 		return search, models.ErrDbOperation
