@@ -127,6 +127,12 @@ func (app *application) GetDailyLog(w http.ResponseWriter, r *http.Request) {
 
 	var calendarLog []models.ActivityDayOverview
 
+	calendarStats := models.StatsOverview{
+		DailyAverage:  0,
+		LongestStreak: 0,
+		CurrentStreak: 0,
+	}
+
 	from, to := r.URL.Query().Get("from"), r.URL.Query().Get("to")
 
 	if from == "" || to == "" {
@@ -146,16 +152,37 @@ func (app *application) GetDailyLog(w http.ResponseWriter, r *http.Request) {
 			for _, x := range calendarHolder {
 				if x.Date.Equal(d) {
 					calendarLog = append(calendarLog, x)
+
+					calendarStats.DailyAverage += x.TotalSec
+
+					if x.TotalSec >= 3600 {
+						calendarStats.CurrentStreak++
+					} else {
+						if calendarStats.LongestStreak < calendarStats.CurrentStreak {
+							calendarStats.LongestStreak = calendarStats.CurrentStreak
+						}
+
+						calendarStats.CurrentStreak = 0
+					}
+
 					continue Outer
 				}
 			}
 
+			// Didnt found the date record on database
+			if calendarStats.LongestStreak < calendarStats.CurrentStreak {
+				calendarStats.LongestStreak = calendarStats.CurrentStreak
+			}
+
 			x := models.ActivityDayOverview{Date: d, TotalSec: 0}
+
 			calendarLog = append(calendarLog, x)
 		}
+
+		calendarStats.DailyAverage = (calendarStats.DailyAverage / len(calendarHolder)) / 3600
 	}
 
-	page := activity_views.Log(calendarLog, partialLog, loggedUser)
+	page := activity_views.Log(calendarLog, partialLog, calendarStats, loggedUser)
 	page.Render(r.Context(), w)
 }
 

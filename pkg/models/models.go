@@ -39,6 +39,12 @@ type ActivityDayOverview struct {
 	TotalSec int     // Total seconds of that day
 }
 
+type StatsOverview struct {
+	DailyAverage  int
+	CurrentStreak int
+	LongestStreak int
+}
+
 type Tag struct {
 	ID   int
 	Type TagEnum

@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-templ Log(calendarLog []models.ActivityDayOverview, partialLog templ.Component, loggedUser bool) {
+templ Log(calendarLog []models.ActivityDayOverview, partialLog templ.Component, stats models.StatsOverview, loggedUser bool) {
 	@layouts_view.StaticHome() {
 		<h1 class="text-3xl font-semibold text-center">
 			/ Habits Log / 
@@ -78,20 +78,21 @@ templ Log(calendarLog []models.ActivityDayOverview, partialLog templ.Component, 
 						hx-get={ fmt.Sprintf("log/%s?partial=true", d.Date.Format(time.DateOnly)) }
 						hx-target="#detailed-log-section"
 						hx-swap="outerHTML"
-						class={ fmt.Sprintf("%s rounded-sm first:row-span-4 first:self-end hover:border hover:border-red-500 size-3", getCalendarDayBg(d.TotalSec)) }
+						class={ fmt.Sprintf("%s rounded-sm first:row-span-4 first:self-end hover:border hover:border-red-500 size-3",
+							getCalendarDayBg(d.TotalSec)) }
 					></button>
 				}
 			</div>
 		</div>
 		<div class="grid grid-cols-3 w-full">
 			<span class="text-center">
-				Daily Average: 0 hours
+				Daily Average: { fmt.Sprintf("%d", stats.DailyAverage) } hours
 			</span>
 			<span class="text-center">
-				Current Streak: 0 days
+				Current Streak: { fmt.Sprintf("%d", stats.CurrentStreak) } days
 			</span>
 			<span class="text-center">
-				Longest Streak: 0 days
+				Longest Streak: { fmt.Sprintf("%d", stats.LongestStreak) } days
 			</span>
 		</div>
 		<hr class="my-5 w-full"/>
@@ -124,7 +125,7 @@ func calcDate(selectedYear int, i int) string {
 func getCalendarDayBg(total int) string {
 
 	if total >= 1 && total < 3000 {
-		return "bg-red-800"
+		return "bg-red-500"
 	}
 	if total >= 3000 && total < 7200 {
 		return "bg-green-800"
